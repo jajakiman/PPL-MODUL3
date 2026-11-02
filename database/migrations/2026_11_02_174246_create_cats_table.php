@@ -1,0 +1,28 @@
+<?php
+
+use App\Models\Cat;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('cats', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('found_at');
+            $table->enum('breed', Cat::BREEDS);
+            $table->enum('temper', Cat::TEMPERS);
+            $table->unsignedSmallInteger('age');
+            $table->boolean('vaccinated')->default(false);
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('cats');
+    }
+};
