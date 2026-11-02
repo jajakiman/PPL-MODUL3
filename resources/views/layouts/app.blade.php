@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <script src="{{ asset('js/app.js') }}" defer></script>
 </head>
-<body class="@yield('body-class')">
+<body class="@yield('body-class', auth()->check() ? 'theme-board' : '')">
     <div class="floral-bg" id="floral-bg" aria-hidden="true"></div>
     <a class="skip-link" href="#konten">Lewati ke konten</a>
 
@@ -20,6 +20,11 @@
             </a>
 
             @auth
+                <nav class="tabs" aria-label="Menu utama">
+                    <a class="tab" href="{{ route('cats.index') }}" @if (request()->routeIs('cats.*')) aria-current="page" @endif>Katalog</a>
+                    <a class="tab" href="{{ route('adoptions.index') }}" @if (request()->routeIs('adoptions.*')) aria-current="page" @endif>{{ auth()->user()->isStaff() ? 'Pengajuan Masuk' : 'Pengajuan Saya' }}</a>
+                </nav>
+
                 <div class="menu-wrap">
                     <button type="button" class="user-icon-btn" aria-label="Menu akun" aria-expanded="false" aria-controls="user-menu" data-menu-toggle>
                         {{ strtoupper(mb_substr(auth()->user()->name, 0, 1)) }}
@@ -28,6 +33,7 @@
                         <p class="menu-meta">
                             <strong>{{ auth()->user()->name }}</strong>
                             <span>{{ auth()->user()->email }}</span>
+                            <span>{{ auth()->user()->isStaff() ? 'Staff Shelter' : 'Adopter' }}</span>
                         </p>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf

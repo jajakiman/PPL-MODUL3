@@ -13,6 +13,10 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+    public const ADOPTER = 'adopter';
+
+    public const STAFF = 'staff';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -45,5 +49,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function adoptions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Adoption::class);
+    }
+
+    public function isStaff(): bool
+    {
+        return $this->role === self::STAFF;
     }
 }

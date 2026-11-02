@@ -10,7 +10,11 @@
             <h1>{{ $cat->name }}</h1>
             <p>Ditemukan di {{ $cat->found_at }}</p>
         </div>
-        <a class="btn btn-ghost" href="{{ route('cats.edit', $cat) }}">Edit</a>
+        @can('staff')
+            <a class="btn btn-ghost" href="{{ route('cats.edit', $cat) }}">Edit</a>
+        @else
+            <a class="btn" href="{{ route('adoptions.create', ['cat' => $cat]) }}">Ajukan Adopsi</a>
+        @endcan
     </div>
 
     <div class="panel">

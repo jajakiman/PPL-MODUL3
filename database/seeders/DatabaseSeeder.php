@@ -17,6 +17,13 @@ class DatabaseSeeder extends Seeder
             'name' => 'Staff Shelter',
             'email' => 'staff@meowdopt.test',
             'password' => 'password',
+            'role' => User::STAFF,
+        ]);
+
+        User::factory()->create([
+            'name' => 'Adopter Kampus',
+            'email' => 'adopter@meowdopt.test',
+            'password' => 'password',
         ]);
 
         Cat::insert([

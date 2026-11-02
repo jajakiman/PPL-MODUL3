@@ -10,6 +10,18 @@ document.addEventListener('click', (event) => {
     if (toggle) {
         setMenu(toggle, toggle.getAttribute('aria-expanded') !== 'true');
     }
+
+    const confirmBtn = event.target.closest('[data-confirm-url]');
+    if (confirmBtn) {
+        const modal = document.getElementById('modal-confirm');
+        modal.querySelector('form').action = confirmBtn.dataset.confirmUrl;
+        modal.querySelectorAll('[data-cat-name]').forEach((el) => (el.textContent = confirmBtn.dataset.confirmCat));
+        modal.showModal();
+    }
+
+    if (event.target.closest('[data-modal-close]') || event.target.tagName === 'DIALOG') {
+        event.target.closest('dialog')?.close();
+    }
 });
 
 document.addEventListener('keydown', (event) => {

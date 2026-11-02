@@ -2,15 +2,39 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Adoption;
 use App\Models\Cat;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class CatController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('cats.index', ['cats' => Cat::latest()->get()]);
+        $cats = Cat::available()->latest()->get();
+        $pending = Adoption::where('status', Adoption::PENDING);
+        $requested = Cat::available()->whereHas('adoptions', fn ($q) => $q->where('status', Adoption::PENDING))->count();
+
+        $breeds = collect(Cat::BREEDS)->mapWithKeys(fn ($breed) => [$breed => [
+            'vaksin' => $cats->where('breed', $breed)->where('vaccinated', true)->count(),
+            'belum' => $cats->where('breed', $breed)->where('vaccinated', false)->count(),
+        ]]);
+
+        return view('cats.index', [
+            'cats' => $cats,
+            'breeds' => $breeds,
+            'topBreed' => $breeds->sortByDesc(fn ($b) => $b['vaksin'] + $b['belum'])->keys()->first(),
+            'pipeline' => [
+                'Belum diajukan' => $cats->count() - $requested,
+                'Sedang diajukan' => $requested,
+                'Sudah diadopsi' => Adoption::where('status', Adoption::DONE)->distinct()->count('cat_id'),
+            ],
+            'adopters' => User::where('role', User::ADOPTER)->count(),
+            'pending' => $request->user()->isStaff()
+                ? $pending->count()
+                : $pending->where('user_id', $request->user()->id)->count(),
+        ]);
     }
 
     public function create()
@@ -46,7 +70,7 @@ class CatController extends Controller
     {
         $cat->delete();
 
-        return redirect()->route('cats.index')->with('status', 'Kucing berhasil diadopsi.');
+        return redirect()->route('cats.index')->with('status', 'Kucing berhasil dihapus.');
     }
 
     private function validated(Request $request): array
