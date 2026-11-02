@@ -407,7 +407,7 @@
           <!-- Bottom Action Button -->
           <div class="pt-2 flex flex-col gap-2">
             @can('adopter')
-              <a href="{{ route('adoptions.create', ['cat_id' => $cat->id]) }}" class="w-full text-center py-3 rounded-xl bg-brand-pink hover:bg-brand-pink-hover text-white text-xs font-bold shadow-md transition-colors block">
+              <a href="{{ route('adoptions.create', ['cat' => $cat]) }}" class="w-full text-center py-3 rounded-xl bg-brand-pink hover:bg-brand-pink-hover text-white text-xs font-bold shadow-md transition-colors block">
                 Ajukan Adopsi
               </a>
             @endcan
