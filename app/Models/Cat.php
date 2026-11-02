@@ -15,7 +15,25 @@ class Cat extends Model
 
     public const TEMPERS = ['Manja', 'Mager', 'Galak'];
 
-    protected $fillable = ['name', 'found_at', 'breed', 'temper', 'age', 'vaccinated'];
+    protected $fillable = ['name', 'found_at', 'breed', 'temper', 'age', 'vaccinated', 'image'];
+
+    public function getImageUrlAttribute(): ?string
+    {
+        if ($this->image && file_exists(public_path('images/' . $this->image))) {
+            return asset('images/' . $this->image);
+        }
+
+        foreach (['.jpg', '.jpeg', '.png', '.webp'] as $ext) {
+            if (file_exists(public_path('images/' . strtolower($this->name) . $ext))) {
+                return asset('images/' . strtolower($this->name) . $ext);
+            }
+            if (file_exists(public_path('images/' . ucfirst($this->name) . $ext))) {
+                return asset('images/' . ucfirst($this->name) . $ext);
+            }
+        }
+
+        return null;
+    }
 
     protected function casts(): array
     {

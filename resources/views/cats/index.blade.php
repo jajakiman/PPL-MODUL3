@@ -363,11 +363,15 @@
 
             <!-- Cat Photo Frame / Silhouette Avatar -->
             <div class="relative h-64 bg-gradient-to-br from-[#1A1D2D] to-[#12141F] overflow-hidden rounded-2xl border border-white/10 flex items-center justify-center group">
-              <div class="w-20 h-20 text-brand-purple/70 transition-transform group-hover:scale-110 duration-300">
-                <svg viewBox="0 0 100 100" class="w-full h-full fill-current drop-shadow-md">
-                  <path d="M20 25 L40 50 L60 50 L80 25 L80 75 Q80 85 70 85 L30 85 Q20 85 20 75 Z" />
-                </svg>
-              </div>
+              @if ($cat->image_url)
+                <img src="{{ $cat->image_url }}" alt="{{ $cat->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+              @else
+                <div class="w-20 h-20 text-brand-purple/70 transition-transform group-hover:scale-110 duration-300">
+                  <svg viewBox="0 0 100 100" class="w-full h-full fill-current drop-shadow-md">
+                    <path d="M20 25 L40 50 L60 50 L80 25 L80 75 Q80 85 70 85 L30 85 Q20 85 20 75 Z" />
+                  </svg>
+                </div>
+              @endif
             </div>
 
             <!-- Cat Typography & Info -->
