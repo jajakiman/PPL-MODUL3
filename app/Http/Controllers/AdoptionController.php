@@ -20,10 +20,8 @@ class AdoptionController extends Controller
 
     public function create(Request $request)
     {
-        $catId = $request->query('cat') ?? $request->query('cat_id');
-
         return view('adoptions.create', [
-            'cat' => Cat::available()->findOrFail($catId),
+            'cat' => Cat::available()->findOrFail($request->query('cat')),
             'adoption' => new Adoption,
         ]);
     }
