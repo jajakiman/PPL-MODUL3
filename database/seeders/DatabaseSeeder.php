@@ -27,9 +27,12 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Cat::insert([
-            ['name' => 'Mochi', 'found_at' => 'Parkiran Gedung C', 'breed' => 'Persia', 'temper' => 'Manja', 'age' => 8, 'vaccinated' => true, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Oyen', 'found_at' => 'Kantin Utama', 'breed' => 'Oren Barbar', 'temper' => 'Mager', 'age' => 14, 'vaccinated' => true, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Belang', 'found_at' => 'Depan Perpustakaan', 'breed' => 'Kampung', 'temper' => 'Galak', 'age' => 5, 'vaccinated' => false, 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Mochi', 'found_at' => 'Parkiran Gedung C', 'breed' => 'Persia', 'temper' => 'Manja', 'age' => 8, 'vaccinated' => true, 'image' => null, 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Oyen', 'found_at' => 'Kantin Utama', 'breed' => 'Oren Barbar', 'temper' => 'Mager', 'age' => 14, 'vaccinated' => true, 'image' => null, 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Belang', 'found_at' => 'Depan Perpustakaan', 'breed' => 'Kampung', 'temper' => 'Galak', 'age' => 5, 'vaccinated' => false, 'image' => null, 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Ciko', 'found_at' => 'Fakultas Ilmu Komputer', 'breed' => 'Anggora', 'temper' => 'Manja', 'age' => 7, 'vaccinated' => true, 'image' => 'ciko.jpg', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Kimi', 'found_at' => 'Taman Asrama Kampus', 'breed' => 'Persia', 'temper' => 'Mager', 'age' => 10, 'vaccinated' => true, 'image' => 'Kimi.jpg', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Lui', 'found_at' => 'Selasar Lab PPL', 'breed' => 'Oren Barbar', 'temper' => 'Galak', 'age' => 6, 'vaccinated' => false, 'image' => 'Lui.jpeg', 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 }

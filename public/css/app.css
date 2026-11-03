@@ -1,46 +1,51 @@
-/* Hallmark · custom: Daylight-inspired, floral bloom field · scope: app · posture: restrained · signature: animated bloom field under grid telemetry */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+/* Hallmark · EISD Meowdopt Midnight Brand Theme · scope: app */
 :root {
-    --surface: #fffdf8;
-    --sunk: #efe8db;
-    --ink: #1d1a16;
-    --ink-soft: #5c5348;
-    --line: #ddd3c2;
-    --line-strong: #b9ac97;
-    --accent: #a8520a;
-    --accent-ink: #fffdf8;
-    --accent-hover: #8a4207;
-    --accent-wash: #f7e3c6;
+    --surface: #161b3d;
+    --sunk: #121630;
+    --ink: #f8fafc;
+    --ink-soft: #94a3b8;
+    --line: rgba(255, 255, 255, 0.12);
+    --line-strong: rgba(255, 255, 255, 0.22);
+    --accent: #494ca0;
+    --accent-ink: #ffffff;
+    --accent-hover: #3c3e86;
+    --accent-wash: rgba(73, 76, 160, 0.25);
+    --accent-pink: #c6149f;
+    --accent-pink-hover: #a61084;
+    --accent-green: #00d97a;
     --sun: #e0ad3a;
-    --ok: #2f6b3a;
-    --ok-wash: #e2efdf;
-    --danger: #a3261b;
-    --danger-wash: #f8e1dc;
-    --focus: #1d4ed8;
+    --ok: #00d97a;
+    --ok-wash: rgba(0, 217, 122, 0.18);
+    --danger: #c6149f;
+    --danger-wash: rgba(198, 20, 159, 0.18);
+    --focus: #494ca0;
 
-    --bloom-pink: #e3c6ba;
-    --bloom-lilac: #c18c86;
-    --bloom-ash: #9ba894;
+    --bloom-pink: #0a0c1b;
+    --bloom-lilac: #161b3d;
+    --bloom-ash: #121630;
 
-    --dusk-sky: #8c4b0e;
-    --dusk-glow: #d4822a;
-    --dusk-ridge: #2b1a0c;
-    --dusk-deep: #120b06;
-    --dusk-field: color-mix(in srgb, var(--dusk-deep) 78%, transparent);
-    --dusk-line: color-mix(in srgb, var(--surface) 18%, transparent);
-    --dusk-muted: color-mix(in srgb, var(--surface) 64%, transparent);
+    --dusk-sky: #494ca0;
+    --dusk-glow: #c6149f;
+    --dusk-ridge: #161b3d;
+    --dusk-deep: #0a0c1b;
+    --dusk-field: rgba(10, 12, 27, 0.95);
+    --dusk-line: rgba(255, 255, 255, 0.15);
+    --dusk-muted: #94a3b8;
 
-    --glass: color-mix(in srgb, var(--surface) 88%, transparent);
-    --glass-strong: color-mix(in srgb, var(--surface) 94%, transparent);
-    --grid-line: color-mix(in srgb, var(--ink) 18%, transparent);
-    --shadow: 0 8px 24px rgb(29 26 22 / 0.12);
+    --glass: rgba(22, 27, 61, 0.75);
+    --glass-strong: rgba(22, 27, 61, 0.9);
+    --grid-line: rgba(255, 255, 255, 0.1);
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 
-    --font: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
-    --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    --font: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-display: 'Space Grotesk', sans-serif;
 
-    --radius: 6px;
-    --radius-lg: 12px;
+    --radius: 12px;
+    --radius-lg: 18px;
     --space: 1rem;
-    --control-h: 2.5rem;
+    --control-h: 2.75rem;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -49,31 +54,23 @@ html, body { overflow-x: clip; }
 
 body {
     margin: 0;
-    background: var(--bloom-pink);
+    background: #0a0c1b;
     color: var(--ink);
     font: 400 1rem/1.55 var(--font);
     -webkit-font-smoothing: antialiased;
 }
 
-/* Bloom field: one radial blob per colour; JS drifts the --bNx/--bNy anchors */
+/* Midnight brand ambient background with subtle glowing blurs */
 .floral-bg {
-    --b1x: 78.73%; --b1y: 61.82%;
-    --b2x: 36.12%; --b2y: 80.21%;
-    --b3x: 68.19%; --b3y: 11.87%;
-    --b4x: 92.11%; --b4y: 81.09%;
     position: fixed;
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    background-color: var(--bloom-pink);
+    background-color: #0a0c1b;
     background-image:
-        url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.105'/></svg>"),
-        radial-gradient(circle at var(--b1x) var(--b1y), var(--bloom-pink) 0%, color-mix(in srgb, var(--bloom-pink) 84.4%, transparent) 19.02%, color-mix(in srgb, var(--bloom-pink) 50%, transparent) 38.05%, color-mix(in srgb, var(--bloom-pink) 15.6%, transparent) 57.07%, transparent 76.1%),
-        radial-gradient(circle at var(--b2x) var(--b2y), var(--bloom-lilac) 0%, color-mix(in srgb, var(--bloom-lilac) 84.4%, transparent) 16.49%, color-mix(in srgb, var(--bloom-lilac) 50%, transparent) 32.98%, color-mix(in srgb, var(--bloom-lilac) 15.6%, transparent) 49.46%, transparent 65.95%),
-        radial-gradient(circle at var(--b3x) var(--b3y), var(--bloom-ash) 0%, color-mix(in srgb, var(--bloom-ash) 84.4%, transparent) 17.45%, color-mix(in srgb, var(--bloom-ash) 50%, transparent) 34.9%, color-mix(in srgb, var(--bloom-ash) 15.6%, transparent) 52.35%, transparent 69.8%),
-        radial-gradient(circle at var(--b4x) var(--b4y), var(--bloom-ash) 0%, color-mix(in srgb, var(--bloom-ash) 84.4%, transparent) 18.32%, color-mix(in srgb, var(--bloom-ash) 50%, transparent) 36.65%, color-mix(in srgb, var(--bloom-ash) 15.6%, transparent) 54.97%, transparent 73.3%);
-    background-size: 120px 120px, auto, auto, auto, auto;
-    background-blend-mode: overlay, normal, normal, normal, normal;
+        radial-gradient(circle at 10% 20%, rgba(198, 20, 159, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(0, 217, 122, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(73, 76, 160, 0.18) 0%, transparent 60%);
 }
 
 h1, h2, h3 {
@@ -561,8 +558,8 @@ legend { padding: 0; margin-bottom: 0.375rem; }
 .block {
     display: grid;
     place-items: center;
-    background: var(--sun);
-    color: var(--accent-hover);
+    background: var(--accent-pink, #c6149f);
+    color: #ffffff;
 }
 .block svg { width: 42%; height: auto; }
 
@@ -579,8 +576,8 @@ legend { padding: 0; margin-bottom: 0.375rem; }
     .block { min-height: 9rem; }
 }
 
-/* Signed-in board: flat warm grey, white cards, black active pill (Boostboard-inspired) */
-.theme-board { --gutter: clamp(0.75rem, 1.5vw, 1.25rem); --board-bg: #ebe7e0; --board-ink: #141210; --hatch: #6d4fc0; --hatch-2: #8d74d8; --flame: #c2410c; background: var(--board-bg); }
+/* Signed-in board: Midnight Indigo Palette, brand-purple & pink accents */
+.theme-board { --gutter: clamp(0.75rem, 1.5vw, 1.25rem); --board-bg: #0a0c1b; --board-ink: #f8fafc; --hatch: #494ca0; --hatch-2: #c6149f; --flame: #00d97a; background: var(--board-bg); }
 .theme-board .floral-bg { background: var(--board-bg); }
 .theme-board .topbar { padding: 0.875rem var(--gutter) 0; }
 .theme-board .topbar-inner {
@@ -592,7 +589,7 @@ legend { padding: 0; margin-bottom: 0.375rem; }
     border: 0;
     backdrop-filter: none;
 }
-.theme-board .brand { justify-self: start; background: var(--surface); padding: 0.5rem 1rem; border-radius: 999px; }
+.theme-board .brand { justify-self: start; background: var(--surface); color: var(--ink); padding: 0.5rem 1rem; border-radius: 999px; border: 1px solid var(--line); }
 .theme-board .topbar-inner > .menu-wrap { justify-self: end; }
 .tabs { display: flex; gap: 0.375rem; flex-wrap: wrap; justify-content: center; }
 .tab {
@@ -602,16 +599,17 @@ legend { padding: 0; margin-bottom: 0.375rem; }
     padding: 0 1.125rem;
     border-radius: 999px;
     background: var(--surface);
-    color: var(--board-ink);
+    color: var(--ink-soft);
     font-size: 0.9375rem;
     text-decoration: none;
+    border: 1px solid var(--line);
 }
-.tab:hover { background: var(--sunk); }
-.tab[aria-current="page"] { background: var(--board-ink); color: var(--surface); }
-.theme-board .user-icon-btn { border-radius: 50%; background: var(--board-ink); border-color: var(--board-ink); color: var(--surface); }
-.theme-board .user-icon-btn:hover { background: var(--ink-soft); }
-.theme-board .panel, .theme-board .table-wrap { background: var(--surface); backdrop-filter: none; border-color: transparent; border-radius: 22px; }
-.theme-board h1 { font-family: var(--font); font-weight: 400; letter-spacing: -0.03em; }
+.tab:hover { background: var(--sunk); color: #ffffff; }
+.tab[aria-current="page"] { background: var(--accent); color: #ffffff; border-color: var(--accent); }
+.theme-board .user-icon-btn { border-radius: 50%; background: var(--accent); border-color: var(--accent); color: #ffffff; }
+.theme-board .user-icon-btn:hover { background: var(--accent-hover); }
+.theme-board .panel, .theme-board .table-wrap, .theme-board .card { background: var(--surface); backdrop-filter: none; border: 1px solid var(--line); border-radius: 20px; }
+.theme-board h1 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em; }
 
 .page-dash { max-width: 90rem; padding: 1.75rem var(--gutter) 2rem; display: grid; gap: var(--gutter); }
 .dash-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; padding-left: 0.25rem; }
