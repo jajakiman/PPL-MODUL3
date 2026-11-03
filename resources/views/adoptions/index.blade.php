@@ -54,22 +54,22 @@
   <header class="w-full border-b border-brand-line bg-[#12141F]/90 backdrop-blur-md sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-6 lg:px-12 h-16 flex items-center justify-between">
       <!-- Brand & Title -->
-      <a href="{{ route('cats.index') }}" class="flex items-center gap-2.5 text-white focus:outline-none">
+      <a href="{{ route('cats.index') }}" class="flex items-center gap-2.5 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple rounded-lg">
         <div class="w-5 h-5 text-brand-purple flex items-center justify-center">
-          <svg viewBox="0 0 100 100" class="w-full h-full fill-current">
+          <svg viewBox="0 0 100 100" class="w-full h-full fill-current" aria-hidden="true">
             <path d="M20 25 L40 50 L60 50 L80 25 L80 75 Q80 85 70 85 L30 85 Q20 85 20 75 Z" />
           </svg>
         </div>
         <span class="font-display font-bold text-sm tracking-tight">EISD Meowdopt</span>
-        <span class="text-xs text-slate-500 hidden sm:inline">• {{ $isStaff ? 'Panel Staff Shelter' : 'Riwayat Pengajuan Adopter' }}</span>
+        <span class="text-xs text-slate-400 hidden sm:inline">• {{ $isStaff ? 'Panel Staff Shelter' : 'Riwayat Pengajuan Adopter' }}</span>
       </a>
 
       <!-- Middle Navigation Tabs -->
       <nav class="hidden md:flex items-center gap-1.5 bg-[#161926] p-1 rounded-full border border-white/10 text-xs">
-        <a href="{{ route('cats.index') }}" class="px-4 py-1.5 rounded-full text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
+        <a href="{{ route('cats.index') }}" class="px-4 py-1.5 rounded-full text-slate-300 hover:text-white hover:bg-white/5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple">
           Katalog
         </a>
-        <a href="{{ route('adoptions.index') }}" class="px-4 py-1.5 rounded-full bg-brand-purple text-white font-semibold shadow-sm">
+        <a href="{{ route('adoptions.index') }}" class="px-4 py-1.5 rounded-full bg-brand-purple text-white font-semibold shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple">
           {{ $isStaff ? 'Pengajuan Masuk' : 'Pengajuan Saya' }}
         </a>
       </nav>
@@ -77,7 +77,7 @@
       <!-- Action & Profile Buttons -->
       <div class="flex items-center gap-3">
         @can('staff')
-          <a href="{{ route('cats.create') }}" class="hidden sm:inline-flex px-4 py-2 rounded-full bg-brand-pink hover:bg-brand-pink-hover text-white text-xs font-semibold shadow-sm transition-colors">
+          <a href="{{ route('cats.create') }}" class="hidden sm:inline-flex px-4 py-2 rounded-full bg-brand-pink hover:bg-brand-pink-hover text-white text-xs font-semibold shadow-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-pink">
             Tambah Kucing
           </a>
         @endcan
@@ -85,7 +85,7 @@
         <!-- User Menu Dropdown -->
         @auth
           <div class="relative">
-            <button type="button" id="user-menu-button" aria-label="Menu akun" onclick="toggleUserDropdown()" class="user-icon-btn flex items-center gap-2 p-1.5 px-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-slate-200 transition-colors">
+            <button type="button" id="user-menu-button" aria-label="Menu akun" onclick="toggleUserDropdown()" class="user-icon-btn flex items-center gap-2 p-1.5 px-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-slate-200 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple">
               <span class="hidden sm:inline">{{ auth()->user()->name }}</span>
               <div class="w-6 h-6 rounded-full bg-brand-purple text-white font-display font-bold text-[10px] flex items-center justify-center">
                 {{ strtoupper(mb_substr(auth()->user()->name, 0, 2)) }}
@@ -108,7 +108,7 @@
               <div class="border-t border-white/10 my-1"></div>
               <form action="{{ route('logout') }}" method="POST" class="px-2">
                 @csrf
-                <button type="submit" class="w-full text-left px-2 py-1.5 rounded-lg text-xs font-semibold text-rose-400 hover:bg-rose-500/10 transition-colors">
+                <button type="submit" class="w-full text-left px-2 py-1.5 rounded-lg text-xs font-semibold text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-rose-400">
                   Logout
                 </button>
               </form>
@@ -127,7 +127,7 @@
     <!-- Flash Messages -->
     @if (session('status'))
       <div class="flash p-4 rounded-xl bg-emerald-950/80 border border-emerald-500/40 text-emerald-200 text-xs font-medium flex items-center gap-2" role="status">
-        <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
         </svg>
         <span>{{ session('status') }}</span>
@@ -166,8 +166,8 @@
         <span class="role-label hidden lg:inline text-xs font-medium text-slate-400">
           {{ $isStaff ? 'Panel Staff Shelter' : 'Dashboard Adopter' }}
         </span>
-        <a class="btn btn-dark px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-semibold transition-colors flex items-center gap-2" href="{{ route('cats.index') }}">
-          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <a class="btn btn-dark px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-semibold transition-colors flex items-center gap-2 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple" href="{{ route('cats.index') }}">
+          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
           <span>Lihat Katalog</span>
@@ -181,43 +181,30 @@
     <section class="card metrics grid grid-cols-1 sm:grid-cols-3 gap-4" aria-label="Ringkasan pengajuan">
       <!-- Metric 1: Total -->
       <div class="metric p-6 rounded-2xl bg-[#12141F] border border-brand-line flex flex-col justify-between space-y-4">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-medium text-slate-400">{{ $isStaff ? 'Total pengajuan masuk' : 'Total pengajuan saya' }}</span>
-          <span class="w-8 h-8 rounded-lg bg-brand-purple/10 border border-brand-purple/20 text-brand-purple flex items-center justify-center text-xs font-mono font-bold">
-            01
-          </span>
-        </div>
         <div>
-          <strong class="font-display font-bold text-3xl sm:text-4xl text-white block">{{ $total }}</strong>
-          <small class="text-xs text-slate-400 mt-1 block">{{ $isStaff ? 'dari seluruh adopter kampus' : 'riwayat pengajuan adopsi' }}</small>
+          <span class="text-xs font-medium text-slate-400 block">{{ $isStaff ? 'Total pengajuan masuk' : 'Total pengajuan saya' }}</span>
+          <strong class="font-display font-bold text-3xl sm:text-4xl text-white mt-2 block">{{ $total }}</strong>
         </div>
+        <small class="text-xs text-slate-400 block">{{ $isStaff ? 'dari seluruh adopter kampus' : 'riwayat pengajuan adopsi' }}</small>
       </div>
 
       <!-- Metric 2: Pending -->
       <div class="metric p-6 rounded-2xl bg-[#12141F] border border-brand-line flex flex-col justify-between space-y-4">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-medium text-slate-400">Menunggu konfirmasi</span>
-          <span class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center text-xs font-mono font-bold">
-            02
-          </span>
-        </div>
         <div>
-          <strong class="font-display font-bold text-3xl sm:text-4xl text-amber-400 block">{{ $pendingCount }}</strong>
-          <small class="text-xs text-slate-400 mt-1 block">{{ $isStaff ? 'sedang diajukan adopter' : 'siap dikonfirmasi atau diedit' }}</small>
+          <span class="text-xs font-medium text-slate-400 block">Menunggu konfirmasi</span>
+          <strong class="font-display font-bold text-3xl sm:text-4xl text-amber-400 mt-2 block">{{ $pendingCount }}</strong>
         </div>
+        <small class="text-xs text-slate-400 block">{{ $isStaff ? 'sedang diajukan adopter' : 'siap dikonfirmasi atau diedit' }}</small>
       </div>
 
       <!-- Metric 3: Done -->
       <div class="metric p-6 rounded-2xl bg-[#12141F] border border-brand-line flex flex-col justify-between space-y-4">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-medium text-slate-400">{{ $isStaff ? 'Resmi teradopsi' : 'Kucing saya adopsi' }}</span>
-          <span class="w-8 h-8 rounded-lg bg-brand-green/10 border border-brand-green/20 text-brand-green flex items-center justify-center text-xs font-mono font-bold">
-            03
-          </span>
+        <div>
+          <span class="text-xs font-medium text-slate-400 block">{{ $isStaff ? 'Resmi teradopsi' : 'Kucing saya adopsi' }}</span>
+          <strong class="font-display font-bold text-3xl sm:text-4xl text-brand-green mt-2 block">{{ $doneCount }}</strong>
         </div>
         <div>
-          <strong class="font-display font-bold text-3xl sm:text-4xl text-brand-green block">{{ $doneCount }}</strong>
-          <div class="rail w-full bg-white/10 h-1.5 rounded-full overflow-hidden mt-3" aria-hidden="true" title="Rasio selesai">
+          <div class="rail w-full bg-white/10 h-1.5 rounded-full overflow-hidden" aria-hidden="true" title="Rasio selesai">
             <i class="block bg-brand-green h-full rounded-full transition-all duration-500" style="--p: {{ $pct }}%; width: {{ $pct }}%;"></i>
           </div>
           <small class="text-xs text-slate-400 mt-2 block">{{ $pct }}% pengajuan selesai</small>
@@ -239,8 +226,8 @@
             {{ $pendingCount }} menunggu konfirmasi &middot; {{ $doneCount }} selesai
           </span>
         </div>
-        <div class="text-xs text-slate-500 font-mono">
-          EISD-MODUL3 • LIVE RECORDS
+        <div class="text-xs text-slate-400 font-medium">
+          Pembaruan Real-Time
         </div>
       </div>
 
@@ -248,7 +235,7 @@
         <!-- Empty State -->
         <div class="empty text-center py-20 px-6 space-y-4">
           <div class="w-16 h-16 rounded-2xl bg-[#161926] border border-white/10 text-brand-purple flex items-center justify-center mx-auto">
-            <svg viewBox="0 0 100 100" class="w-8 h-8 fill-current">
+            <svg viewBox="0 0 100 100" class="w-8 h-8 fill-current" aria-hidden="true">
               <path d="M20 25 L40 50 L60 50 L80 25 L80 75 Q80 85 70 85 L30 85 Q20 85 20 75 Z" />
             </svg>
           </div>
@@ -259,7 +246,7 @@
             @else
               <p class="text-xs text-slate-400 max-w-sm mx-auto">Pilih kucing di katalog, buka detailnya, lalu ajukan adopsi.</p>
               <div class="pt-3">
-                <a class="btn btn-dark inline-block px-5 py-2.5 rounded-xl bg-brand-pink hover:bg-brand-pink-hover text-white font-semibold text-xs transition-colors shadow-md" href="{{ route('cats.index') }}">
+                <a class="btn btn-dark inline-block px-5 py-2.5 rounded-xl bg-brand-pink hover:bg-brand-pink-hover text-white font-semibold text-xs transition-colors shadow-md cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-pink" href="{{ route('cats.index') }}">
                   Lihat Katalog
                 </a>
               </div>
@@ -290,10 +277,10 @@
                     <div class="flex items-center gap-3">
                       <div class="w-11 h-11 rounded-xl overflow-hidden bg-[#1A1D2D] border border-brand-line shrink-0 flex items-center justify-center">
                         @if ($adoption->cat->image_url)
-                          <img src="{{ $adoption->cat->image_url }}" alt="{{ $adoption->cat->name }}" class="w-full h-full object-cover">
+                          <img src="{{ $adoption->cat->image_url }}" alt="{{ $adoption->cat->name }}" width="44" height="44" class="w-full h-full object-cover">
                         @else
                           <div class="w-6 h-6 text-brand-purple">
-                            <svg viewBox="0 0 100 100" class="w-full h-full fill-current">
+                            <svg viewBox="0 0 100 100" class="w-full h-full fill-current" aria-hidden="true">
                               <path d="M20 25 L40 50 L60 50 L80 25 L80 75 Q80 85 70 85 L30 85 Q20 85 20 75 Z" />
                             </svg>
                           </div>
@@ -367,7 +354,7 @@
                         <div class="menu-wrap relative">
                           <button 
                             type="button" 
-                            class="icon-btn p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white transition-colors border border-white/5" 
+                            class="icon-btn min-w-[44px] min-h-[44px] p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white transition-colors border border-white/5 flex items-center justify-center cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple" 
                             aria-label="Aksi pengajuan" 
                             aria-expanded="false" 
                             aria-controls="aksi-menu-{{ $adoption->id }}" 
@@ -385,7 +372,7 @@
                             id="aksi-menu-{{ $adoption->id }}" 
                             hidden
                           >
-                            <a class="menu-item block px-3.5 py-2 text-xs font-medium text-slate-200 hover:bg-white/10 hover:text-white transition-colors text-left" href="{{ route('adoptions.edit', $adoption) }}">
+                            <a class="menu-item block px-3.5 py-2 text-xs font-medium text-slate-200 hover:bg-white/10 hover:text-white transition-colors text-left focus:outline-none focus-visible:bg-white/10" href="{{ route('adoptions.edit', $adoption) }}">
                               Edit Pengajuan
                             </a>
                           </div>
@@ -394,7 +381,7 @@
                         <!-- Confirm Adoption Button -->
                         <button 
                           type="button" 
-                          class="icon-btn p-2 rounded-xl bg-brand-green/10 hover:bg-brand-green/20 text-brand-green border border-brand-green/30 transition-colors shadow-sm cursor-pointer" 
+                          class="icon-btn min-w-[44px] min-h-[44px] p-2.5 rounded-xl bg-brand-green/10 hover:bg-brand-green/20 text-brand-green border border-brand-green/30 transition-colors shadow-sm cursor-pointer flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-green" 
                           aria-label="Konfirmasi adopsi" 
                           title="Konfirmasi adopsi" 
                           data-confirm-url="{{ route('adoptions.confirm', $adoption) }}" 
@@ -416,6 +403,16 @@
     </section>
 
   </main>
+
+  <!-- ========================================================================= -->
+  <!-- SEMANTIC LANDMARK FOOTER -->
+  <!-- ========================================================================= -->
+  <footer class="w-full border-t border-brand-line bg-[#0D0E15] py-6 text-center text-xs text-slate-400">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <span>EISD Meowdopt • Shelter Kucing Kampus</span>
+      <span>Platform Pengelolaan & Adopsi Satwa</span>
+    </div>
+  </footer>
 
   <!-- ========================================================================= -->
   <!-- MODAL KONFIRMASI ADOPSI (Preserves Dusk Contract) -->
@@ -443,10 +440,10 @@
           </p>
         </div>
         <div class="modal-actions pt-2 flex items-center justify-end gap-3">
-          <button type="button" class="btn btn-ghost px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-semibold transition-colors cursor-pointer" data-modal-close>
+          <button type="button" class="btn btn-ghost px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-semibold transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple" data-modal-close>
             Batal
           </button>
-          <button type="submit" class="btn btn-dark px-5 py-2.5 rounded-xl bg-brand-green hover:bg-emerald-400 text-[#0D0E15] text-xs font-bold shadow-lg transition-colors cursor-pointer">
+          <button type="submit" class="btn btn-dark px-5 py-2.5 rounded-xl bg-brand-green hover:bg-emerald-400 text-[#0D0E15] text-xs font-bold shadow-lg transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-green">
             Ya, Saya Siap
           </button>
         </div>
