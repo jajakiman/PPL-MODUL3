@@ -106,3 +106,4 @@ class AdoptionIndexViewTest extends TestCase
         $response->assertSee('user-icon-btn', false);
     }
 }
+
