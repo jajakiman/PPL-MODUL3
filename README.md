@@ -1,59 +1,108 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# EISD Meowdopt — Modul 3 PPL: Automated End-to-End Testing (Laravel Dusk)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi **EISD Meowdopt** adalah platform sistem informasi shelter dan adopsi kucing kampus yang dikembangkan menggunakan **Laravel 12**. Repositori ini digunakan sebagai studi kasus praktikum **Modul 3 Praktikum Perangkat Lunak (PPL)** dengan fokus pengujian otomatis antarmuka web (*Browser / E2E Testing*) menggunakan **Laravel Dusk**.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 1. Panduan Setup Lingkungan Praktikan
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Ikuti tahapan berikut secara berurutan sebelum memulai pembuatan skenario pengujian:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### A. Clone & Install Dependencies
+```bash
+# 1. Masuk ke folder proyek setelah clone
+cd PPL-MODUL3
 
-## Learning Laravel
+# 2. Install dependensi PHP (Laravel)
+composer install
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+# 3. Install Laravel Dusk untuk automated browser testing
+composer require laravel/dusk --dev
+php artisan dusk:install
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### B. Konfigurasi Environment & Database
+1. Salin file `.env.example` menjadi `.env`:
+   ```bash
+   cp .env.example .env
+   # Pada Windows PowerShell:
+   copy .env.example .env
+   ```
+2. Generate Application Key:
+   ```bash
+   php artisan key:generate
+   ```
+3. Pastikan service **MySQL (XAMPP / MariaDB)** sudah aktif di port `3306` dengan database `eisd_meowdopt`.
+4. Jalankan migrasi dan seeder data awal:
+   ```bash
+   php artisan migrate:fresh --seed
+   ```
 
-## Laravel Sponsors
+### C. Menjalankan Aplikasi & Pengujian
+```bash
+# Jalankan server lokal aplikasi di terminal 1:
+php artisan serve
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+# Jalankan seluruh skenario pengujian Laravel Dusk di terminal 2:
+php artisan dusk
+```
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## 2. Akun Bawaan Seeder (`DatabaseSeeder.php`)
 
-## Contributing
+Gunakan akun berikut jika ingin melakukan pengecekan manual via browser:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+| Role | Email | Password | Kegunaan |
+|---|---|---|---|
+| **Adopter** | `adopter@meowdopt.test` | `password` | Akun calon pengadopsi kucing (Katalog, Pengajuan Adopsi, Riwayat). |
+| **Staff Shelter** | `staff@meowdopt.test` | `password` | Akun pengelola shelter (Inventaris kucing, Daftar pengajuan masuk). |
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 3. Daftar Skenario Pengujian Laravel Dusk
 
-## Security Vulnerabilities
+Gunakan tabel skenario berikut sebagai acuan utama dalam menyusun file pengujian Dusk (`tests/Browser/`):
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+| No | Skenario | Tujuan | Langkah Pengujian | Ekspektasi Hasil |
+|:---:|---|---|---|---|
+| **1** | **Registrasi Akun Adopter Berhasil** | Memastikan calon adopter baru dapat mendaftar melalui form registrasi dan diarahkan ke halaman login. | 1. Buka halaman `/register`.<br>2. Isi form registrasi:<br>&nbsp;&nbsp;• `name`: Nama lengkap adopter baru.<br>&nbsp;&nbsp;• `email`: Email unik baru.<br>&nbsp;&nbsp;• `password` & `password_confirmation`: Minimal 8 karakter.<br>&nbsp;&nbsp;• Centang `cat_lover` (pernyataan pecinta kucing).<br>3. Klik tombol `Register`. | 1. Berpindah ke path `/login`.<br>2. Muncul pesan sukses: `Registrasi berhasil.`<br>3. Input email otomatis terisi dengan email yang didaftarkan. |
+| **2** | **Login Adopter Berhasil** | Memastikan adopter yang telah terdaftar dapat login melalui form login dan masuk ke katalog kucing. | 1. Buka halaman `/login`.<br>2. Isi input `email` valid dan `password` valid.<br>3. Klik tombol `Login`. | 1. Berpindah ke path `/cats`.<br>2. Muncul notifikasi: `Login berhasil.`<br>3. Halaman memuat heading `Katalog Kucing Adopsi`. |
+| **3** | **Tambah Pengajuan Adopsi Berhasil (Create)** | Memastikan alur pengajuan adopsi kucing oleh adopter tersimpan ke database. | 1. Login menggunakan helper `$browser->loginAs($user)`.<br>2. Buka halaman katalog `/cats`, lalu klik tautan `Ajukan Adopsi` pada kartu kucing (atau akses `/adoptions/create?cat={id}`).<br>3. Isi form pengajuan secara lengkap:<br>&nbsp;&nbsp;• `address`: Alamat domisili.<br>&nbsp;&nbsp;• `housing_type`: Pilih salah satu tipe hunian (dropdown).<br>&nbsp;&nbsp;• `experience`: Pilih pengalaman memelihara (radio button).<br>&nbsp;&nbsp;• `indoor`: Centang kesiapan merawat dalam ruangan.<br>&nbsp;&nbsp;• `cost_commitment`: Centang komitmen biaya pakan/vaksin.<br>4. Klik tombol `Kirim Pengajuan`. | 1. Data pengajuan berhasil tersimpan.<br>2. Berpindah ke path riwayat `/adoptions`.<br>3. Muncul notifikasi: `Pengajuan adopsi berhasil dikirim.`<br>4. Baris data pengajuan kucing tampil di tabel riwayat. |
+| **4** | **Lihat Katalog & Detail Kucing (Read)** | Memastikan katalog kucing tampil lengkap beserta informasi spesifikasi pada halaman detail. | 1. Login menggunakan helper `$browser->loginAs($user)`.<br>2. Buka halaman katalog `/cats`.<br>3. Verifikasi ketersediaan kartu kucing di katalog.<br>4. Klik tautan `Detail` pada salah satu kartu kucing. | 1. Pada `/cats`: Tampil judul `Katalog Kucing Adopsi` dan daftar kartu kucing.<br>2. Pada `/cats/{id}`: Menampilkan detail ras, sifat, umur, dan status vaksinasi kucing terpilih. |
+| **5** | **Update Pengajuan Adopsi Gagal (Test Negatif)** | Memastikan validasi sistem menolak pembaruan data pengajuan jika input wajib dikosongkan. | 1. Login menggunakan helper `$browser->loginAs($user)`.<br>2. Buka halaman edit pengajuan `/adoptions/{id}/edit`.<br>3. Kosongkan nilai pada input alamat tempat tinggal (`name="address"`).<br>4. Klik tombol `Perbarui Pengajuan`. | 1. Data tidak terupdate di database.<br>2. Sistem tetap bertahan di halaman edit (`/adoptions/{id}/edit`).<br>3. Muncul pesan error validasi: `Alamat tempat tinggal wajib diisi.` |
+| **6** | **Hapus Pengajuan Adopsi Berhasil (Delete)** | Memastikan adopter dapat membatalkan/menghapus pengajuan adopsi miliknya melalui dialog konfirmasi browser. | 1. Login menggunakan helper `$browser->loginAs($user)`.<br>2. Buka halaman riwayat `/adoptions`.<br>3. Klik tombol pemicu menu aksi `button[aria-label='Aksi pengajuan']`.<br>4. Klik tombol `Hapus pengajuan` (`button[aria-label='Hapus pengajuan']`).<br>5. Tangani dialog konfirmasi browser native menggunakan `$browser->acceptDialog()`. | 1. Data pengajuan terhapus dari database.<br>2. Halaman me-refresh di path `/adoptions`.<br>3. Muncul notifikasi: `Pengajuan adopsi berhasil dihapus.`<br>4. Baris pengajuan terkait tidak lagi muncul di tabel riwayat. |
+| **7** | **Logout Akun Berhasil** | Memastikan sesi user terhapus dan akun keluar dari sistem melalui menu akun navbar. | 1. Login menggunakan helper `$browser->loginAs($user)`.<br>2. Buka halaman `/cats`.<br>3. Klik tombol menu profil akun pada navbar (`button.user-icon-btn` atau `aria-label="Menu akun"`).<br>4. Klik tombol `Logout` pada menu dropdown yang terbuka. | 1. Pengguna keluar dari sesi terautentikasi.<br>2. Berpindah ke halaman beranda `/` (atau `/login`).<br>3. Muncul notifikasi: `Logout berhasil.`<br>4. Navbar kembali menampilkan tombol guest (`Login` dan `Register`). |
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 4. Aturan Penting Pengerjaan Test Dusk
+
+1. **Aturan Autentikasi Skenario:**
+   - **Hanya Skenario 1 dan Skenario 2** yang melakukan pengujian login/register melalui interaksi elemen form UI (`$browser->type()`, `$browser->press()`).
+   - **Skenario 3 sampai Skenario 7** mempersiapkan user terlebih dahulu menggunakan factory model (`$user = User::factory()->create(...)`) dan langsung masuk menggunakan helper Dusk:
+     ```php
+     $user = User::factory()->create([
+         'role' => \App\Models\User::ADOPTER,
+     ]);
+
+     $this->browse(function ($browser) use ($user): void {
+         $browser->loginAs($user)
+             ->visit('/cats')
+             // Lanjutkan asersi skenario...
+     });
+     ```
+
+2. **Daftar Atribut & Selektor Wajib (Testing Contracts):**
+   - **Form Input `name`:**
+     - Register: `name`, `email`, `password`, `password_confirmation`, `cat_lover`
+     - Login: `email`, `password`
+     - Pengajuan Adopsi: `address`, `housing_type`, `experience`, `indoor`, `cost_commitment`
+   - **Tombol & Tautan (Aksi):**
+     - Menu Akun Navbar: `.user-icon-btn` atau `button[aria-label='Menu akun']`
+     - Menu Aksi Tabel: `button[aria-label='Aksi pengajuan']` dan container `.aksi-menu`
+     - Tombol Hapus Pengajuan: `button[aria-label='Hapus pengajuan']`
+     - Teks Tombol Submit: `Register`, `Login`, `Kirim Pengajuan`, `Perbarui Pengajuan`
+     - Teks Tautan: `Detail`, `Ajukan Adopsi`, `Edit Pengajuan`
+   - **Flash Message Status:**
+     - Notifikasi status ditampilkan di elemen ber-role status / `.flash` dengan teks persis sesuai tabel skenario di atas.
