@@ -8,7 +8,7 @@
     <div class="page-head">
         <div>
             <h1>Tambah Kucing</h1>
-            <p>Catat kucing yang baru ditemukan di kampus.</p>
+            <p>Catat kucing yang baru ditemukan di Bandung.</p>
         </div>
     </div>
 

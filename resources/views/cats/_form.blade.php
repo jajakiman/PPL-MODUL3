@@ -14,7 +14,7 @@
 
     <div class="field">
         <label class="label" for="found_at">Lokasi Ditemukan</label>
-        <input class="input" id="found_at" type="text" name="found_at" value="{{ old('found_at', $cat->found_at) }}" maxlength="100" placeholder="Contoh: Parkiran Gedung C" required @error('found_at') aria-invalid="true" aria-describedby="found_at-error" @enderror>
+        <input class="input" id="found_at" type="text" name="found_at" value="{{ old('found_at', $cat->found_at) }}" maxlength="100" placeholder="Contoh: Dago, Bandung" required @error('found_at') aria-invalid="true" aria-describedby="found_at-error" @enderror>
         @error('found_at')
             <p class="error" id="found_at-error">{{ $message }}</p>
         @enderror
