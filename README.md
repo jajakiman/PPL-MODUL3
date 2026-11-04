@@ -32,9 +32,12 @@ php artisan dusk:install
    ```bash
    php artisan key:generate
    ```
-3. Pastikan service **MySQL (XAMPP / MariaDB)** sudah aktif di port `3306`, lalu jalankan migrasi database:
+3. Pastikan service **MySQL (XAMPP / MariaDB)** sudah aktif di port `3306`. Buat database baru bernama `eisd_meowdopt`, atau biarkan terminal Laravel membuatnya secara otomatis saat proses migrasi.
+4. Jalankan migrasi tabel sekaligus pengisian data awal (seeder):
    ```bash
-   php artisan migrate
+   php artisan migrate --seed
+   # Catatan: Bila ingin mereset ulang seluruh tabel & data dari awal kapan saja:
+   # php artisan migrate:fresh --seed
    ```
 
 ### C. Running APP
@@ -72,36 +75,3 @@ Gunakan tabel skenario berikut sebagai acuan utama dalam menyusun file pengujian
 | **5** | **Update Pengajuan Adopsi Gagal (Test Negatif)** | Memastikan validasi sistem menolak pembaruan data pengajuan jika input wajib dikosongkan. | 1. Login menggunakan helper `$browser->loginAs($user)`.<br>2. Buka halaman riwayat pengajuan `/adoptions`.<br>3. Klik tombol pemicu menu aksi `button[aria-label='Aksi pengajuan']` pada baris pengajuan.<br>4. Klik tautan `Edit Pengajuan` (`clickLink('Edit Pengajuan')`) untuk membuka form edit.<br>5. Kosongkan nilai pada input alamat tempat tinggal (`name="address"`).<br>6. Klik tombol `Perbarui Pengajuan`. | 1. Sistem membuka halaman edit `/adoptions/{id}/edit`.<br>2. Data tidak terupdate di database.<br>3. Sistem tetap bertahan di halaman edit (`/adoptions/{id}/edit`).<br>4. Muncul pesan error validasi: `Alamat tempat tinggal wajib diisi.` |
 | **6** | **Hapus Pengajuan Adopsi Berhasil (Delete)** | Memastikan adopter dapat membatalkan/menghapus pengajuan adopsi miliknya melalui dialog konfirmasi browser. | 1. Login menggunakan helper `$browser->loginAs($user)`.<br>2. Buka halaman riwayat `/adoptions`.<br>3. Klik tombol pemicu menu aksi `button[aria-label='Aksi pengajuan']`.<br>4. Klik tombol `Hapus pengajuan` (`button[aria-label='Hapus pengajuan']`).<br>5. Tangani dialog konfirmasi browser native menggunakan `$browser->acceptDialog()`. | 1. Data pengajuan terhapus dari database.<br>2. Halaman me-refresh di path `/adoptions`.<br>3. Muncul notifikasi: `Pengajuan adopsi berhasil dihapus.`<br>4. Baris pengajuan terkait tidak lagi muncul di tabel riwayat. |
 | **7** | **Logout Akun Berhasil** | Memastikan sesi user terhapus dan akun keluar dari sistem melalui menu akun navbar. | 1. Login menggunakan helper `$browser->loginAs($user)`.<br>2. Buka halaman `/cats`.<br>3. Klik tombol menu profil akun pada navbar (`button.user-icon-btn` atau `aria-label="Menu akun"`).<br>4. Klik tombol `Logout` pada menu dropdown yang terbuka. | 1. Pengguna keluar dari sesi terautentikasi.<br>2. Berpindah ke halaman beranda `/` (atau `/login`).<br>3. Muncul notifikasi: `Logout berhasil.`<br>4. Navbar kembali menampilkan tombol guest (`Login` dan `Register`). |
-
----
-
-## 4. Aturan Penting Pengerjaan Test Dusk
-
-1. **Aturan Autentikasi Skenario:**
-   - **Hanya Skenario 1 dan Skenario 2** yang melakukan pengujian login/register melalui interaksi elemen form UI (`$browser->type()`, `$browser->press()`).
-   - **Skenario 3 sampai Skenario 7** mempersiapkan user terlebih dahulu menggunakan factory model (`$user = User::factory()->create(...)`) dan langsung masuk menggunakan helper Dusk:
-     ```php
-     $user = User::factory()->create([
-         'role' => \App\Models\User::ADOPTER,
-     ]);
-
-     $this->browse(function ($browser) use ($user): void {
-         $browser->loginAs($user)
-             ->visit('/cats')
-             // Lanjutkan asersi skenario...
-     });
-     ```
-
-2. **Daftar Atribut & Selektor Wajib (Testing Contracts):**
-   - **Form Input `name`:**
-     - Register: `name`, `email`, `password`, `password_confirmation`, `cat_lover`
-     - Login: `email`, `password`
-     - Pengajuan Adopsi: `address`, `housing_type`, `experience`, `indoor`, `cost_commitment`
-   - **Tombol & Tautan (Aksi):**
-     - Menu Akun Navbar: `.user-icon-btn` atau `button[aria-label='Menu akun']`
-     - Menu Aksi Tabel: `button[aria-label='Aksi pengajuan']` dan container `.aksi-menu`
-     - Tombol Hapus Pengajuan: `button[aria-label='Hapus pengajuan']`
-     - Teks Tombol Submit: `Register`, `Login`, `Kirim Pengajuan`, `Perbarui Pengajuan`
-     - Teks Tautan: `Detail`, `Ajukan Adopsi`, `Edit Pengajuan`
-   - **Flash Message Status:**
-     - Notifikasi status ditampilkan di elemen ber-role status / `.flash` dengan teks persis sesuai tabel skenario di atas.
