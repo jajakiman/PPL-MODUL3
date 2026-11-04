@@ -4,7 +4,7 @@ Aplikasi **EISD Meowdopt** adalah platform sistem informasi shelter dan adopsi k
 
 ---
 
-## 1. Panduan Setup Lingkungan Praktikan
+## 1. Setup
 
 Ikuti tahapan berikut secara berurutan sebelum memulai pembuatan skenario pengujian:
 
@@ -32,13 +32,15 @@ php artisan dusk:install
    ```bash
    php artisan key:generate
    ```
-3. Pastikan service **MySQL (XAMPP / MariaDB)** sudah aktif di port `3306` dengan database `eisd_meowdopt`.
-4. Jalankan migrasi dan seeder data awal:
+3. Pastikan service **MySQL (XAMPP / MariaDB)** sudah aktif di port `3306`. Buat database baru bernama `eisd_meowdopt` (misal via phpMyAdmin), atau biarkan prompt terminal Laravel membuatnya secara otomatis saat proses migrasi.
+4. Jalankan migrasi tabel sekaligus pengisian data awal (seeder):
    ```bash
-   php artisan migrate:fresh --seed
+   php artisan migrate --seed
+   # Catatan: Bila ingin mereset ulang seluruh tabel & data dari awal kapan saja:
+   # php artisan migrate:fresh --seed
    ```
 
-### C. Menjalankan Aplikasi & Pengujian
+### C. Running APP
 ```bash
 # Jalankan server lokal aplikasi di terminal 1:
 php artisan serve
