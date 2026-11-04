@@ -18,7 +18,7 @@
       name="address" 
       value="{{ old('address', $adoption->address) }}" 
       maxlength="255" 
-      placeholder="Contoh: Kos Sukabirus Blok B No. 12" 
+      placeholder="Contoh: Jl. Dipatiukur No. 12, Coblong, Bandung" 
       required 
       @error('address') aria-invalid="true" aria-describedby="address-error" @enderror
     >

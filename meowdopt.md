@@ -13,7 +13,7 @@ Aplikasi ini menggunakan arsitektur **Zero-Build Frontend** (tanpa Node.js, tanp
 │   ├── Http/Controllers/
 │   │   ├── AuthController.php        # Login, Register, Logout
 │   │   ├── CatController.php         # Dashboard katalog & CRUD kucing (Staff)
-│   │   └── AdoptionController.php    # Pengajuan, edit, & konfirmasi adopsi (Adopter)
+│   │   └── AdoptionController.php    # Pengajuan, edit, & hapus pengajuan (Adopter)
 │   ├── Models/
 │   │   ├── User.php                  # Role: 'adopter' (default) | 'staff'
 │   │   ├── Cat.php                   # Konstanta BREEDS, TEMPERS, & scopeAvailable()
@@ -25,7 +25,7 @@ Aplikasi ini menggunakan arsitektur **Zero-Build Frontend** (tanpa Node.js, tanp
 │   └── seeders/DatabaseSeeder.php    # Akun Staff, Adopter, & 3 kucing awal
 ├── public/
 │   ├── css/app.css                   # Seluruh styling aplikasi (single stylesheet)
-│   └── js/app.js                     # Menu dropdown, modal <dialog>, confirm, animasi
+│   └── js/app.js                     # Menu dropdown, confirm native, animasi
 ├── resources/views/
 │   ├── layouts/app.blade.php         # Kerangka HTML utama, topbar, flash message
 │   ├── welcome.blade.php             # Landing page publik (tema Daylight)
@@ -43,7 +43,7 @@ Aplikasi ini menggunakan arsitektur **Zero-Build Frontend** (tanpa Node.js, tanp
 Sistem membedakan dua peran melalui kolom `users.role` dan Laravel Gate:
 1. **Adopter (`role = 'adopter'`, Gate `can:adopter`):**
    - Peran default saat registrasi akun baru (`role` tidak dimasukkan ke `$fillable` pada `User.php` untuk mencegah manipulasi role saat register).
-   - Melihat katalog bersih di `/cats`, membuka detail kucing `/cats/{cat}`, mengajukan adopsi di `/adoptions/create`, mengedit pengajuan, dan mengonfirmasi adopsi melalui modal.
+   - Melihat katalog bersih di `/cats`, membuka detail kucing `/cats/{cat}`, mengajukan adopsi di `/adoptions/create`, mengedit pengajuan, dan menghapus pengajuan yang masih berstatus `Diajukan`.
 2. **Staff Shelter (`role = 'staff'`, Gate `can:staff`):**
    - Mengelola inventaris kucing (`/cats/create`, `/cats/{cat}/edit`, `DELETE /cats/{cat}`).
    - Memantau seluruh daftar pengajuan masuk dari adopter di `/adoptions`.
@@ -51,10 +51,9 @@ Sistem membedakan dua peran melalui kolom `users.role` dan Laravel Gate:
 ### B. Alur Status Kucing & Adopsi
 - **`Cat::scopeAvailable()` (`app/Models/Cat.php`):**
   Menyaring kucing yang belum memiliki pengajuan berstatus `Diadopsi` (`Adoption::DONE`).
-- Saat adopter menekan tombol **Ya, Saya Siap** pada modal konfirmasi (`POST /adoptions/{adoption}/confirm`):
-  1. `AdoptionController@confirm` memeriksa apakah pengajuan milik user tersebut dan kucing masih tersedia.
-  2. Status pengajuan diubah dari `'Diajukan'` menjadi `'Diadopsi'`.
-  3. Kucing tersebut otomatis tidak lagi muncul di katalog `/cats` maupun statistik landing page `/`.
+- Saat adopter menekan tombol hapus pengajuan lalu menyetujui dialog browser (`DELETE /adoptions/{adoption}`):
+  1. `AdoptionController@destroy` memeriksa apakah pengajuan milik user tersebut dan masih berstatus `'Diajukan'`.
+  2. Pengajuan dihapus, lalu user diarahkan kembali ke `/adoptions` dengan pesan `Pengajuan adopsi berhasil dihapus.`
 
 ### C. Konstanta Validasi Model
 Jika ingin menambah pilihan dropdown atau radio di form, ubah konstanta pada model terkait (otomatis terpakai di migrasi, validasi controller, dan opsi Blade):
@@ -96,12 +95,8 @@ Seluruh interaksi UI berjalan tanpa library eksternal:
 1. **Menu Dropdown (`[data-menu-toggle]`):**
    - Tombol pemicu wajib memiliki atribut `data-menu-toggle`, `aria-expanded="false"`, dan `aria-controls="id-menu"`.
    - Elemen menu target menggunakan atribut `hidden`. Klik di luar menu atau tombol `Escape` otomatis menutup menu.
-2. **Modal Konfirmasi Adopsi (`<dialog id="modal-confirm">`):**
-   - Dipicu oleh tombol dengan atribut `data-confirm-url="..."` dan `data-confirm-cat="NamaKucing"`.
-   - Script otomatis mengisi atribut `action` pada `<form>` di dalam modal, menyisipkan nama kucing ke seluruh elemen `[data-cat-name]`, lalu memanggil `modal.showModal()`.
-   - Tombol dengan atribut `data-modal-close` atau klik pada area backdrop menutup modal.
-3. **Konfirmasi Native Browser (`form[data-confirm]`):**
-   - Digunakan pada form hapus kucing milik Staff (`data-confirm="Hapus ... dari katalog?"`). Saat form disubmit, script memanggil `window.confirm()` bawaan browser.
+2. **Konfirmasi Native Browser (`form[data-confirm]`):**
+   - Digunakan pada form hapus pengajuan milik Adopter (`data-confirm="Hapus pengajuan adopsi ...?"`) dan form hapus kucing milik Staff. Saat form disubmit, script memanggil `window.confirm()` bawaan browser.
 
 ---
 
@@ -110,18 +105,16 @@ Seluruh interaksi UI berjalan tanpa library eksternal:
 Agar seluruh 7 skenario pengujian otomatis Laravel Dusk tetap berjalan **PASS (Green)**, bagian berikut **tidak boleh dihapus atau diubah namanya** saat memodifikasi UI:
 
 ### A. URL & Route
-- `/`, `/register`, `/login`, `/logout`, `/cats`, `/cats/{cat}`, `/adoptions`, `/adoptions/create`, `/adoptions/{adoption}/edit`, `/adoptions/{adoption}/confirm`.
+- `/`, `/register`, `/login`, `/logout`, `/cats`, `/cats/{cat}`, `/adoptions`, `/adoptions/create`, `/adoptions/{adoption}/edit`, `DELETE /adoptions/{adoption}`.
 
 ### B. Selector & Atribut Elemen
 | Komponen | Selector / Atribut Wajib | Lokasi File Blade |
 |---|---|---|
 | Tombol Menu Akun Navbar | `.user-icon-btn` | `resources/views/layouts/app.blade.php` |
-| Link Navigasi & Aksi | Teks link: `Register`, `Detail`, `Ajukan Adopsi`, `Edit Pengajuan` | `welcome`, `cats/index`, `cats/show`, `adoptions/index` |
+| Link Navigasi & Aksi | Teks link: `Register`, `Detail`, `Ajukan Adopsi`, `Edit Pengajuan` (`Detail` hanya boleh ada satu per kartu) | `welcome`, `cats/index`, `cats/show`, `adoptions/index` |
 | Tombol Menu Titik Tiga Pengajuan | `button[aria-label='Aksi pengajuan']` | `resources/views/adoptions/index.blade.php` |
-| Kontainer Dropdown Aksi | `.aksi-menu` | `cats/index.blade.php` & `adoptions/index.blade.php` |
-| Tombol Buka Modal Konfirmasi | `button[aria-label='Konfirmasi adopsi']` | `resources/views/adoptions/index.blade.php` |
-| Elemen Modal Konfirmasi | `#modal-confirm` | `resources/views/adoptions/index.blade.php` |
-| Tombol Submit di Dalam Modal | Teks tombol: `Ya, Saya Siap` | `resources/views/adoptions/index.blade.php` |
+| Kontainer Dropdown Aksi | `.aksi-menu` | `adoptions/index.blade.php` (dan `cats/index.blade.php` untuk Staff) |
+| Tombol Hapus Pengajuan | `button[aria-label='Hapus pengajuan']` pada `<form data-confirm="...">` | `resources/views/adoptions/index.blade.php` |
 | Tombol Hapus Kucing (Staff) | `button[aria-label='Hapus kucing']` pada `<form data-confirm="...">` | `resources/views/cats/index.blade.php` |
 
 ### C. Atribut `name` pada Input Form
@@ -131,13 +124,12 @@ Agar seluruh 7 skenario pengujian otomatis Laravel Dusk tetap berjalan **PASS (G
 
 ### D. Teks Heading & Flash Message Wajib
 - Heading katalog: `Katalog Kucing Adopsi`
-- Heading modal: `Konfirmasi Adopsi <Nama Kucing>`
 - Notifikasi flash (`session('status')`):
   - `Registrasi berhasil.`
   - `Login berhasil.`
   - `Pengajuan adopsi berhasil dikirim.`
   - `Data pengajuan berhasil diperbarui.`
-  - `Selamat! Adopsi resmi selesai.`
+  - `Pengajuan adopsi berhasil dihapus.`
   - `Kucing berhasil dihapus.`
   - `Logout berhasil.`
 
@@ -171,7 +163,7 @@ Agar seluruh 7 skenario pengujian otomatis Laravel Dusk tetap berjalan **PASS (G
 ## 7. Akun Seeder & Perintah Menjalankan Proyek
 
 ### A. Persiapan Awal
-```bash
+
 # 1. Jalankan migrasi dan isi data awal (seeder)
 php artisan migrate:fresh --seed
 
@@ -183,4 +175,4 @@ php artisan serve
 | Role | Email | Password | Kegunaan Review UI |
 |---|---|---|---|
 | **Staff Shelter** | `staff@meowdopt.test` | `password` | Cek tampilan Panel Staff, form tambah/edit kucing, dialog hapus, & tabel pengajuan masuk. |
-| **Adopter** | `adopter@meowdopt.test` | `password` | Cek tampilan Dashboard Adopter, detail kucing, form ajukan adopsi, & modal konfirmasi adopsi. |
+| **Adopter** | `adopter@meowdopt.test` | `password` | Cek tampilan Dashboard Adopter, detail kucing, form ajukan adopsi, edit, & hapus pengajuan. |

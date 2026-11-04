@@ -4,19 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ auth()->user()->isStaff() ? 'Pengajuan Masuk' : 'Pengajuan Saya' }} | EISD Meowdopt</title>
+  <link rel="icon" type="image/png" href="{{ asset('images/Vertical Logo 5.png') }}">
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Space Grotesk & Inter -->
+  <!-- Google Fonts: Bricolage Grotesque & Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            display: ['"Space Grotesk"', 'sans-serif']
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Bricolage Grotesque"', 'sans-serif']
           },
           colors: {
             brand: {
@@ -43,96 +44,20 @@
   @php
     $isStaff = auth()->user()->isStaff();
     $total = $adoptions->count();
-    $pendingCount = $adoptions->where('status', \App\Models\Adoption::PENDING)->count();
-    $doneCount = $total - $pendingCount;
-    $pct = $total ? round($doneCount / $total * 100) : 0;
+    $indoorCount = $adoptions->where('indoor', true)->count();
+    $vaccinatedCount = $adoptions->filter(fn ($a) => $a->cat->vaccinated)->count();
+    $pct = $total ? round($vaccinatedCount / $total * 100) : 0;
   @endphp
 
   <!-- ========================================================================= -->
   <!-- TOPBAR -->
   <!-- ========================================================================= -->
-  <header class="w-full border-b border-brand-line bg-[#12141F]/90 backdrop-blur-md sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-6 lg:px-12 h-16 flex items-center justify-between">
-      <!-- Brand & Title -->
-      <a href="{{ route('cats.index') }}" class="flex items-center gap-2.5 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple rounded-lg">
-        <div class="w-5 h-5 text-brand-purple flex items-center justify-center">
-          <svg viewBox="0 0 100 100" class="w-full h-full fill-current" aria-hidden="true">
-            <path d="M20 25 L40 50 L60 50 L80 25 L80 75 Q80 85 70 85 L30 85 Q20 85 20 75 Z" />
-          </svg>
-        </div>
-        <span class="font-display font-bold text-sm tracking-tight">EISD Meowdopt</span>
-        <span class="text-xs text-slate-400 hidden sm:inline">• {{ $isStaff ? 'Panel Staff Shelter' : 'Riwayat Pengajuan Adopter' }}</span>
-      </a>
-
-      <!-- Middle Navigation Tabs -->
-      <nav class="hidden md:flex items-center gap-1.5 bg-[#161926] p-1 rounded-full border border-white/10 text-xs">
-        <a href="{{ route('cats.index') }}" class="px-4 py-1.5 rounded-full text-slate-300 hover:text-white hover:bg-white/5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple">
-          Katalog
-        </a>
-        <a href="{{ route('adoptions.index') }}" class="px-4 py-1.5 rounded-full bg-brand-purple text-white font-semibold shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple">
-          {{ $isStaff ? 'Pengajuan Masuk' : 'Pengajuan Saya' }}
-        </a>
-      </nav>
-
-      <!-- Action & Profile Buttons -->
-      <div class="flex items-center gap-3">
-        @can('staff')
-          <a href="{{ route('cats.create') }}" class="hidden sm:inline-flex px-4 py-2 rounded-full bg-brand-pink hover:bg-brand-pink-hover text-white text-xs font-semibold shadow-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-pink">
-            Tambah Kucing
-          </a>
-        @endcan
-
-        <!-- User Menu Dropdown -->
-        @auth
-          <div class="relative">
-            <button type="button" id="user-menu-button" aria-label="Menu akun" onclick="toggleUserDropdown()" class="user-icon-btn flex items-center gap-2 p-1.5 px-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-slate-200 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple">
-              <span class="hidden sm:inline">{{ auth()->user()->name }}</span>
-              <div class="w-6 h-6 rounded-full bg-brand-purple text-white font-display font-bold text-[10px] flex items-center justify-center">
-                {{ strtoupper(mb_substr(auth()->user()->name, 0, 2)) }}
-              </div>
-            </button>
-
-            <!-- Dropdown Body -->
-            <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-56 rounded-xl bg-[#1A1D2D] border border-white/15 shadow-2xl py-2 z-50">
-              <div class="px-4 py-2 border-b border-white/10">
-                <p class="text-[10px] text-slate-400">Masuk sebagai</p>
-                <p class="text-xs font-semibold text-white truncate">{{ auth()->user()->name }}</p>
-                <p class="text-[11px] text-purple-300 truncate">{{ auth()->user()->email }} ({{ $isStaff ? 'Staff Shelter' : 'Adopter' }})</p>
-              </div>
-              <a href="{{ route('cats.index') }}" class="block px-4 py-2 text-xs font-medium text-slate-300 hover:bg-white/10 hover:text-white md:hidden">
-                Katalog Kucing
-              </a>
-              <a href="{{ route('adoptions.index') }}" class="block px-4 py-2 text-xs font-medium text-slate-300 hover:bg-white/10 hover:text-white md:hidden">
-                {{ $isStaff ? 'Pengajuan Masuk' : 'Pengajuan Saya' }}
-              </a>
-              <div class="border-t border-white/10 my-1"></div>
-              <form action="{{ route('logout') }}" method="POST" class="px-2">
-                @csrf
-                <button type="submit" class="w-full text-left px-2 py-1.5 rounded-lg text-xs font-semibold text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-rose-400">
-                  Logout
-                </button>
-              </form>
-            </div>
-          </div>
-        @endauth
-      </div>
-    </div>
-  </header>
+  @include('partials.navbar')
 
   <!-- ========================================================================= -->
   <!-- MAIN DASHBOARD CONTENT -->
   <!-- ========================================================================= -->
   <main id="konten" class="flex-1 max-w-7xl w-full mx-auto px-6 lg:px-12 py-8 sm:py-12 space-y-8">
-
-    <!-- Flash Messages -->
-    @if (session('status'))
-      <div class="flash p-4 rounded-xl bg-emerald-950/80 border border-emerald-500/40 text-emerald-200 text-xs font-medium flex items-center gap-2" role="status">
-        <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-        </svg>
-        <span>{{ session('status') }}</span>
-      </div>
-    @endif
 
     @error('adoption')
       <div class="error-box p-4 rounded-xl bg-rose-950/80 border border-rose-500/40 text-rose-200 text-xs font-medium" role="alert">
@@ -158,14 +83,11 @@
           {{ $isStaff ? 'Pengajuan Adopsi Masuk' : 'Pengajuan Adopsi Saya' }}
         </h1>
         <p class="text-xs text-slate-400 max-w-xl">
-          {{ $isStaff ? 'Kelola dan verifikasi data calon adopter kampus secara transparan dan menyeluruh.' : 'Pantau perkembangan status pengajuan adopsi kucing Anda hingga resmi diserahkan.' }}
+          {{ $isStaff ? 'Kelola dan verifikasi data calon adopter Bandung.' : 'Pantau dan kelola daftar pengajuan adopsi kucing yang sudah kamu kirim.' }}
         </p>
       </div>
 
       <div class="dash-actions flex items-center gap-3">
-        <span class="role-label hidden lg:inline text-xs font-medium text-slate-400">
-          {{ $isStaff ? 'Panel Staff Shelter' : 'Dashboard Adopter' }}
-        </span>
         <a class="btn btn-dark px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-semibold transition-colors flex items-center gap-2 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple" href="{{ route('cats.index') }}">
           <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -185,29 +107,29 @@
           <span class="text-xs font-medium text-slate-400 block">{{ $isStaff ? 'Total pengajuan masuk' : 'Total pengajuan saya' }}</span>
           <strong class="font-display font-bold text-3xl sm:text-4xl text-white mt-2 block">{{ $total }}</strong>
         </div>
-        <small class="text-xs text-slate-400 block">{{ $isStaff ? 'dari seluruh adopter kampus' : 'riwayat pengajuan adopsi' }}</small>
+        <small class="text-xs text-slate-400 block">{{ $isStaff ? 'dari seluruh adopter Bandung' : 'riwayat pengajuan adopsi' }}</small>
       </div>
 
-      <!-- Metric 2: Pending -->
+      <!-- Metric 2: Indoor -->
       <div class="metric p-6 rounded-2xl bg-[#12141F] border border-brand-line flex flex-col justify-between space-y-4">
         <div>
-          <span class="text-xs font-medium text-slate-400 block">Menunggu konfirmasi</span>
-          <strong class="font-display font-bold text-3xl sm:text-4xl text-amber-400 mt-2 block">{{ $pendingCount }}</strong>
+          <span class="text-xs font-medium text-slate-400 block">Perawatan indoor</span>
+          <strong class="font-display font-bold text-3xl sm:text-4xl text-white mt-2 block">{{ $indoorCount }}</strong>
         </div>
-        <small class="text-xs text-slate-400 block">{{ $isStaff ? 'sedang diajukan adopter' : 'siap dikonfirmasi atau diedit' }}</small>
+        <small class="text-xs text-slate-400 block">kucing dirawat di dalam ruangan</small>
       </div>
 
-      <!-- Metric 3: Done -->
+      <!-- Metric 3: Vaccinated -->
       <div class="metric p-6 rounded-2xl bg-[#12141F] border border-brand-line flex flex-col justify-between space-y-4">
         <div>
-          <span class="text-xs font-medium text-slate-400 block">{{ $isStaff ? 'Resmi teradopsi' : 'Kucing saya adopsi' }}</span>
-          <strong class="font-display font-bold text-3xl sm:text-4xl text-brand-green mt-2 block">{{ $doneCount }}</strong>
+          <span class="text-xs font-medium text-slate-400 block">Sudah divaksin</span>
+          <strong class="font-display font-bold text-3xl sm:text-4xl text-brand-green mt-2 block">{{ $vaccinatedCount }} dari {{ $total }}</strong>
         </div>
         <div>
-          <div class="rail w-full bg-white/10 h-1.5 rounded-full overflow-hidden" aria-hidden="true" title="Rasio selesai">
-            <i class="block bg-brand-green h-full rounded-full transition-all duration-500" style="--p: {{ $pct }}%; width: {{ $pct }}%;"></i>
+          <div class="rail w-full bg-white/10 h-1.5 rounded-full overflow-hidden" aria-hidden="true">
+            <i class="block bg-brand-green h-full rounded-full" style="width: {{ $pct }}%;"></i>
           </div>
-          <small class="text-xs text-slate-400 mt-2 block">{{ $pct }}% pengajuan selesai</small>
+          <small class="text-xs text-slate-400 mt-2 block">kucing dengan vaksin lengkap</small>
         </div>
       </div>
     </section>
@@ -215,19 +137,16 @@
     <!-- ======================================================================= -->
     <!-- TABLE CARD -->
     <!-- ======================================================================= -->
-    <section class="card table-card rounded-2xl bg-[#12141F] border border-brand-line overflow-hidden shadow-2xl" aria-labelledby="pengajuan-title">
+    <section class="card table-card rounded-2xl bg-[#12141F] border border-brand-line" aria-labelledby="pengajuan-title">
       <!-- Card Head -->
-      <div class="card-head p-6 border-b border-brand-line flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-[#161926]">
+      <div class="card-head p-6 rounded-t-2xl border-b border-brand-line flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-[#161926]">
         <div>
           <h2 id="pengajuan-title" class="font-display font-bold text-lg text-white">
             {{ $isStaff ? 'Daftar pengajuan adopter' : 'Daftar pengajuan saya' }}
           </h2>
           <span class="muted text-xs text-slate-400">
-            {{ $pendingCount }} menunggu konfirmasi &middot; {{ $doneCount }} selesai
+            {{ $total }} kucing tercatat dalam daftar {{ $isStaff ? 'adopsi' : 'adopsimu' }}
           </span>
-        </div>
-        <div class="text-xs text-slate-400 font-medium">
-          Pembaruan Real-Time
         </div>
       </div>
 
@@ -242,7 +161,7 @@
           <div class="space-y-1">
             <h2 class="font-display font-bold text-lg text-white">Belum ada pengajuan</h2>
             @can('staff')
-              <p class="text-xs text-slate-400 max-w-sm mx-auto">Pengajuan dari adopter kampus akan langsung muncul di panel ini.</p>
+              <p class="text-xs text-slate-400 max-w-sm mx-auto">Pengajuan dari adopter Bandung akan langsung muncul di panel ini.</p>
             @else
               <p class="text-xs text-slate-400 max-w-sm mx-auto">Pilih kucing di katalog, buka detailnya, lalu ajukan adopsi.</p>
               <div class="pt-3">
@@ -255,7 +174,7 @@
         </div>
       @else
         <!-- Responsive Table -->
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto sm:overflow-visible">
           <table class="table w-full text-left border-collapse">
             <thead>
               <tr class="border-b border-brand-line bg-[#161926]/60 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
@@ -335,7 +254,7 @@
                   <td class="py-4 px-6">
                     @if ($adoption->isPending())
                       <span class="badge badge-warn inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30">
-                        <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                        <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
                         {{ $adoption->status }}
                       </span>
                     @else
@@ -348,7 +267,7 @@
 
                   <!-- Aksi Column (Preserves all Dusk selectors) -->
                   <td class="py-4 px-6 text-right">
-                    @if ($adoption->isPending() && Gate::allows('adopter'))
+                    @if (Gate::allows('adopter'))
                       <div class="row-actions inline-flex items-center justify-end gap-2">
                         <!-- Three-dot Menu Wrap -->
                         <div class="menu-wrap relative">
@@ -368,27 +287,29 @@
                           </button>
                           <!-- Dropdown Menu -->
                           <div 
-                            class="menu aksi-menu absolute right-0 mt-1 w-44 rounded-xl bg-[#1A1D2D] border border-white/15 shadow-2xl py-1.5 z-30" 
+                            class="menu aksi-menu absolute right-0 top-[calc(100%+0.5rem)] w-48 rounded-2xl bg-[#141519] border border-white/10 shadow-[0_16px_40px_rgba(0,0,0,0.65)] p-1.5 z-40" 
                             id="aksi-menu-{{ $adoption->id }}" 
                             hidden
                           >
-                            <a class="menu-item block px-3.5 py-2 text-xs font-medium text-slate-200 hover:bg-white/10 hover:text-white transition-colors text-left focus:outline-none focus-visible:bg-white/10" href="{{ route('adoptions.edit', $adoption) }}">
-                              Edit Pengajuan
+                            <a class="menu-item flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-200 hover:bg-white/[0.06] hover:text-white transition-colors whitespace-nowrap focus:outline-none focus-visible:bg-white/10" href="{{ route('adoptions.edit', $adoption) }}">
+                              <span>Edit Pengajuan</span>
+                              <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125" />
+                              </svg>
                             </a>
                           </div>
                         </div>
 
-                        <!-- Confirm Adoption Button -->
+                        <!-- Delete Adoption (triggers custom UI modal) -->
                         <button 
                           type="button" 
-                          class="icon-btn min-w-[44px] min-h-[44px] p-2.5 rounded-xl bg-brand-green/10 hover:bg-brand-green/20 text-brand-green border border-brand-green/30 transition-colors shadow-sm cursor-pointer flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-green" 
-                          aria-label="Konfirmasi adopsi" 
-                          title="Konfirmasi adopsi" 
-                          data-confirm-url="{{ route('adoptions.confirm', $adoption) }}" 
-                          data-confirm-cat="{{ $adoption->cat->name }}"
+                          onclick="openDeleteModal('{{ route('adoptions.destroy', $adoption) }}', '{{ e($adoption->cat->name) }}')"
+                          class="icon-btn min-w-[44px] min-h-[44px] p-2.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-colors shadow-sm cursor-pointer flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-400" 
+                          aria-label="Hapus pengajuan" 
+                          title="Hapus pengajuan"
                         >
                           <svg class="w-4 h-4" viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                            <path d="M4 7h16M10 11v6M14 11v6M5 7l1 13a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1l1-13M9 7V4h6v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                           </svg>
                         </button>
                       </div>
@@ -409,50 +330,45 @@
   <!-- ========================================================================= -->
   <footer class="w-full border-t border-brand-line bg-[#0D0E15] py-6 text-center text-xs text-slate-400">
     <div class="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col sm:flex-row items-center justify-between gap-3">
-      <span>EISD Meowdopt • Shelter Kucing Kampus</span>
-      <span>Platform Pengelolaan & Adopsi Satwa</span>
+      <span>EISD Meowdopt • Portal Adopsi Kucing Bandung</span>
+      <span>Temukan Teman Kucing di Daerah Bandung</span>
     </div>
   </footer>
 
   <!-- ========================================================================= -->
-  <!-- MODAL KONFIRMASI ADOPSI (Preserves Dusk Contract) -->
+  <!-- DELETE CONFIRMATION MODAL WINDOW -->
   <!-- ========================================================================= -->
-  @can('adopter')
-    <dialog class="modal fixed inset-0 m-auto rounded-2xl bg-[#161926] border border-white/15 shadow-2xl p-0 backdrop:bg-black/75 backdrop:backdrop-blur-sm max-w-md w-full" id="modal-confirm" aria-labelledby="modal-title" aria-describedby="modal-desc">
-      <form class="modal-card p-6 sm:p-8 space-y-5" method="POST" action="">
-        @csrf
-        <div class="modal-head flex items-center justify-between">
-          <span class="modal-icon w-11 h-11 rounded-xl bg-brand-green/10 border border-brand-green/30 text-brand-green flex items-center justify-center" aria-hidden="true">
-            <svg class="w-5 h-5" viewBox="0 0 24 24">
-              <path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-            </svg>
-          </span>
-          <span class="chip chip-sunk px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-slate-300">
-            Komitmen Adopter
-          </span>
+  <div id="delete-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm p-4" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title" onclick="if (event.target === this) closeDeleteModal()">
+    <div class="w-full max-w-md rounded-2xl bg-[#141519] border border-white/10 shadow-[0_24px_60px_rgba(0,0,0,0.75)] p-6 space-y-5">
+      <div class="flex items-start gap-4">
+        <div class="w-11 h-11 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-400 flex items-center justify-center shrink-0">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </svg>
         </div>
-        <div class="space-y-2">
-          <h2 id="modal-title" class="font-display font-bold text-xl sm:text-2xl text-white">
-            Konfirmasi Adopsi <span data-cat-name>Kucing</span>
-          </h2>
-          <p id="modal-desc" class="muted text-xs text-slate-300 leading-relaxed">
-            Yakin kamu siap bertanggung jawab penuh merawat <strong class="text-white" data-cat-name>kucing ini</strong> seumur hidupnya? Setelah dikonfirmasi, kucing resmi menjadi tanggung jawabmu dan keluar dari katalog.
+        <div class="space-y-1.5">
+          <h3 id="delete-modal-title" class="font-display font-bold text-lg text-white">Hapus Pengajuan Adopsi?</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Apakah kamu yakin ingin menghapus data adopsi kucing <strong id="delete-cat-name" class="text-white font-semibold"></strong>? Kucing akan kembali tersedia di katalog adopsi.
           </p>
         </div>
-        <div class="modal-actions pt-2 flex items-center justify-end gap-3">
-          <button type="button" class="btn btn-ghost px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-semibold transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple" data-modal-close>
-            Batal
-          </button>
-          <button type="submit" class="btn btn-dark px-5 py-2.5 rounded-xl bg-brand-green hover:bg-emerald-400 text-[#0D0E15] text-xs font-bold shadow-lg transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-green">
-            Ya, Saya Siap
-          </button>
-        </div>
+      </div>
+
+      <form id="delete-adoption-form" method="POST" class="flex items-center justify-end gap-2.5 pt-2 border-t border-white/[0.08]">
+        @csrf
+        @method('DELETE')
+        <button type="button" onclick="closeDeleteModal()" class="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-slate-300 hover:text-white transition-colors cursor-pointer">
+          Batal
+        </button>
+        <button type="submit" id="confirm-delete-btn" class="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-xs font-semibold text-white shadow-lg shadow-rose-600/25 transition-colors cursor-pointer">
+          Ya, Hapus
+        </button>
       </form>
-    </dialog>
-  @endcan
+    </div>
+  </div>
 
   <!-- ========================================================================= -->
-  <!-- JAVASCRIPT: USER DROPDOWN TOGGLE -->
+  <!-- JAVASCRIPT: USER DROPDOWN & DELETE MODAL -->
   <!-- ========================================================================= -->
   <script>
     function toggleUserDropdown() {
@@ -461,6 +377,28 @@
         dropdown.classList.toggle('hidden');
       }
     }
+
+    function openDeleteModal(actionUrl, catName) {
+      const modal = document.getElementById('delete-modal');
+      const form = document.getElementById('delete-adoption-form');
+      const nameEl = document.getElementById('delete-cat-name');
+      if (!modal || !form || !nameEl) return;
+      form.action = actionUrl;
+      nameEl.textContent = catName;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeDeleteModal() {
+      const modal = document.getElementById('delete-modal');
+      if (!modal) return;
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeDeleteModal();
+    });
 
     document.addEventListener('click', function(e) {
       const btn = document.getElementById('user-menu-button');
