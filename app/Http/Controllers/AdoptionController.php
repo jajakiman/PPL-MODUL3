@@ -51,23 +51,18 @@ class AdoptionController extends Controller
         return redirect()->route('adoptions.index')->with('status', 'Data pengajuan berhasil diperbarui.');
     }
 
-    public function confirm(Request $request, Adoption $adoption)
+    public function destroy(Request $request, Adoption $adoption)
     {
         $this->ensureOwnPending($request, $adoption);
 
-        // ponytail: no row lock, so two simultaneous confirms on one cat could both pass; wrap in a transaction with lockForUpdate if that ever matters.
-        if (! $adoption->cat->isAvailable()) {
-            return back()->withErrors(['adoption' => 'Kucing ini sudah diadopsi orang lain.']);
-        }
+        $adoption->delete();
 
-        $adoption->update(['status' => Adoption::DONE]);
-
-        return redirect()->route('cats.index')->with('status', 'Selamat! Adopsi resmi selesai.');
+        return redirect()->route('adoptions.index')->with('status', 'Pengajuan adopsi berhasil dihapus.');
     }
 
     private function ensureOwnPending(Request $request, Adoption $adoption): void
     {
-        abort_unless($request->user()->is($adoption->user) && $adoption->isPending(), 403);
+        abort_unless($request->user()->is($adoption->user), 403);
     }
 
     private function validated(Request $request): array

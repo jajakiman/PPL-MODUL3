@@ -17,7 +17,8 @@ class Adoption extends Model
 
     protected $fillable = ['user_id', 'cat_id', 'address', 'housing_type', 'experience', 'indoor', 'cost_commitment', 'status'];
 
-    protected $attributes = ['status' => self::PENDING];
+    // ponytail: 1-step adoption for single-role Dusk flow; switch back to self::PENDING when staff approval workflow is added.
+    protected $attributes = ['status' => self::DONE];
 
     protected function casts(): array
     {

@@ -13,7 +13,6 @@ class CatController extends Controller
     public function index(Request $request)
     {
         $cats = Cat::available()->latest()->get();
-        $pending = Adoption::where('status', Adoption::PENDING);
         $requested = Cat::available()->whereHas('adoptions', fn ($q) => $q->where('status', Adoption::PENDING))->count();
 
         $breeds = collect(Cat::BREEDS)->mapWithKeys(fn ($breed) => [$breed => [
@@ -31,9 +30,9 @@ class CatController extends Controller
                 'Sudah diadopsi' => Adoption::where('status', Adoption::DONE)->distinct()->count('cat_id'),
             ],
             'adopters' => User::where('role', User::ADOPTER)->count(),
-            'pending' => $request->user()->isStaff()
-                ? $pending->count()
-                : $pending->where('user_id', $request->user()->id)->count(),
+            'mine' => $request->user()->isStaff()
+                ? Adoption::count()
+                : $request->user()->adoptions()->count(),
         ]);
     }
 

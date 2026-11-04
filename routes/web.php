@@ -28,8 +28,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::middleware('can:adopter')->group(function () {
-        Route::resource('adoptions', AdoptionController::class)->only(['create', 'store', 'edit', 'update']);
-        Route::post('/adoptions/{adoption}/confirm', [AdoptionController::class, 'confirm'])->name('adoptions.confirm');
+        Route::resource('adoptions', AdoptionController::class)->only(['create', 'store', 'edit', 'update', 'destroy']);
     });
 
     Route::resource('cats', CatController::class)->only(['index', 'show']);
