@@ -11,17 +11,6 @@ document.addEventListener('click', (event) => {
         setMenu(toggle, toggle.getAttribute('aria-expanded') !== 'true');
     }
 
-    const confirmBtn = event.target.closest('[data-confirm-url]');
-    if (confirmBtn) {
-        const modal = document.getElementById('modal-confirm');
-        modal.querySelector('form').action = confirmBtn.dataset.confirmUrl;
-        modal.querySelectorAll('[data-cat-name]').forEach((el) => (el.textContent = confirmBtn.dataset.confirmCat));
-        modal.showModal();
-    }
-
-    if (event.target.closest('[data-modal-close]') || event.target.tagName === 'DIALOG') {
-        event.target.closest('dialog')?.close();
-    }
 });
 
 document.addEventListener('keydown', (event) => {
@@ -72,4 +61,14 @@ document.addEventListener('submit', (event) => {
 function setMenu(toggle, open) {
     toggle.setAttribute('aria-expanded', String(open));
     document.getElementById(toggle.getAttribute('aria-controls')).hidden = !open;
+}
+
+const flash = document.querySelector('.flash');
+if (flash) {
+    const dismiss = () => {
+        flash.classList.add('is-hiding');
+        setTimeout(() => flash.remove(), 250);
+    };
+    setTimeout(dismiss, 2500);
+    document.addEventListener('click', dismiss, { once: true });
 }
