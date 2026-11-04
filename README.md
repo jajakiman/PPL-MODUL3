@@ -2,6 +2,9 @@
 
 Aplikasi **EISD Meowdopt** adalah platform sistem informasi shelter dan adopsi kucing kampus yang dikembangkan menggunakan **Laravel 12**. Repositori ini digunakan sebagai studi kasus praktikum **Modul 3 Praktikum Perangkat Lunak (PPL)** dengan fokus pengujian otomatis antarmuka web (*Browser / E2E Testing*) menggunakan **Laravel Dusk**.
 
+### Test Case Scenario
+[ Reg ](## Daftar Skenario Test)
+[ INT ](## Test Case Scenario)
 ---
 
 ## Setup
@@ -52,7 +55,7 @@ Gunakan akun berikut jika ingin melakukan pengecekan manual via browser:
 
 ---
 
-## Daftar Skenario Pengujian Laravel Dusk
+## Daftar Skenario Test
 
 Gunakan tabel skenario berikut sebagai acuan utama dalam menyusun file pengujian Dusk (`tests/Browser/`):
 
@@ -70,7 +73,7 @@ Gunakan tabel skenario berikut sebagai acuan utama dalam menyusun file pengujian
 
 ---
 
-## Laravel Dusk Test Scenarios (English Version)
+## Test Case Scenario
 
 > **Notation convention:** Field names refer to HTML `name` attributes (e.g. `name="password_confirmation"`), buttons/links match the exact text displayed on screen, and non-text elements use CSS selectors / `aria-label`.
 
