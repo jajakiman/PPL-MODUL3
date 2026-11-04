@@ -134,7 +134,7 @@
           <span class="text-xs font-medium text-slate-400">{{ $isStaff ? 'Total adopsi' : 'Adopsi saya' }}</span>
           <div>
             <span class="font-display font-bold text-3xl text-white block">{{ $mine }}</span>
-            <a href="{{ route('adoptions.index') }}" class="text-xs text-purple-300 hover:text-white underline underline-offset-4 mt-1 inline-block rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple">
+            <a href="{{ route('adoptions.index') }}" class="mt-2 inline-flex items-center px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple">
               {{ $isStaff ? 'Lihat pengajuan masuk' : 'Lihat pengajuan saya' }}
             </a>
           </div>

@@ -42,7 +42,12 @@
   @include('partials.navbar')
 
   <main id="konten" class="flex-1 w-full max-w-7xl mx-auto px-6 lg:px-12 py-8 sm:py-12 space-y-6">
-    <a href="{{ route('cats.index') }}" class="back-link inline-flex items-center gap-1.5 text-sm font-semibold text-slate-400 hover:text-white transition-colors">&larr; Kembali ke katalog</a>
+    <a href="{{ route('cats.index') }}" class="back-link inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple">
+      <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+      <span>Kembali ke katalog</span>
+    </a>
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
       <div class="lg:col-span-5 rounded-2xl border border-brand-line bg-[#161926] overflow-hidden aspect-[4/3] lg:aspect-auto lg:min-h-[26rem] flex items-center justify-center">
