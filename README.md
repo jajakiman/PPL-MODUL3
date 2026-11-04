@@ -6,7 +6,7 @@ Aplikasi **EISD Meowdopt** adalah platform sistem informasi shelter dan adopsi k
 
 [Reg](#daftar-skenario-test)
 
-[INT](#test-case-scenario)
+[INT](#test-case-scenario-1)
 
 ---
 
