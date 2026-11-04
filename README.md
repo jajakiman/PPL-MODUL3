@@ -3,8 +3,9 @@
 Aplikasi **EISD Meowdopt** adalah platform sistem informasi shelter dan adopsi kucing kampus yang dikembangkan menggunakan **Laravel 12**. Repositori ini digunakan sebagai studi kasus praktikum **Modul 3 Praktikum Perangkat Lunak (PPL)** dengan fokus pengujian otomatis antarmuka web (*Browser / E2E Testing*) menggunakan **Laravel Dusk**.
 
 ### Test Case Scenario
-[Reg](##daftar-skenario-test)
-[INT](##test-case-scenario)
+[Reg](#daftar-skenario-test)
+
+[INT](#test-case-scenario)
 ---
 
 ## Setup
