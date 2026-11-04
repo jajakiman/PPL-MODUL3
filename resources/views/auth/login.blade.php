@@ -88,11 +88,23 @@
             </p>
           </div>
 
-          <!-- Live Success Banner (Dusk Skenario 10: "Logout berhasil.") -->
           @if (session('status'))
-            <div id="success-banner" class="p-3.5 rounded-xl bg-emerald-950/80 border border-emerald-500/40 text-emerald-200 text-xs font-medium text-center" role="status">
-              {{ session('status') }}
+            <div id="flash-banner" role="status"
+                 class="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2.5 px-5 py-3 rounded-[14px] bg-[#141519] border border-[#00D97A]/40 text-[#00D97A] text-sm font-semibold shadow-[0_16px_40px_rgba(0,0,0,0.65)] cursor-pointer transition-all duration-200">
+              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.25" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              <span id="flash-message">{{ session('status') }}</span>
             </div>
+            <script>
+              (() => {
+                const el = document.getElementById('flash-banner');
+                const dismiss = () => {
+                  el.classList.add('opacity-0', '-translate-y-2', 'pointer-events-none');
+                  setTimeout(() => el.remove(), 250);
+                };
+                setTimeout(dismiss, 2500);
+                setTimeout(() => document.addEventListener('click', dismiss, { once: true }), 50);
+              })();
+            </script>
           @endif
 
           <!-- Live Error Banner (Dusk Skenario 4: "Email atau password salah.") -->

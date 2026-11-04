@@ -31,16 +31,15 @@ class AuthController extends Controller
             'cat_lover.accepted' => 'Centang pernyataan pecinta kucing untuk mendaftar.',
         ]);
 
-        $user = User::create([
+        User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => $data['password'],
         ]);
 
-        Auth::login($user);
-        $request->session()->regenerate();
-
-        return redirect()->route('cats.index')->with('status', 'Registrasi berhasil.');
+        return redirect()->route('login')
+            ->withInput(['email' => $data['email']])
+            ->with('status', 'Registrasi berhasil.');
     }
 
     public function showLogin()
