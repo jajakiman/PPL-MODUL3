@@ -32,12 +32,9 @@ php artisan dusk:install
    ```bash
    php artisan key:generate
    ```
-3. Pastikan service **MySQL (XAMPP / MariaDB)** sudah aktif di port `3306`. Buat database baru bernama `eisd_meowdopt` (misal via phpMyAdmin), atau biarkan terminal Laravel membuatnya secara otomatis saat proses migrasi.
-4. Jalankan migrasi tabel sekaligus pengisian data awal (seeder):
+3. Pastikan service **MySQL (XAMPP / MariaDB)** sudah aktif di port `3306`, lalu jalankan migrasi database:
    ```bash
-   php artisan migrate --seed
-   # Catatan: Bila ingin mereset ulang seluruh tabel & data dari awal kapan saja:
-   # php artisan migrate:fresh --seed
+   php artisan migrate
    ```
 
 ### C. Running APP
