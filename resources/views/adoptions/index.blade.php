@@ -300,10 +300,12 @@
                           </div>
                         </div>
 
-                        <!-- Delete Adoption (triggers custom UI modal) -->
+                        <!-- Delete Adoption (native confirm() for Dusk waitForDialog/acceptDialog) -->
+                        <form method="POST" action="{{ route('adoptions.destroy', $adoption) }}" data-confirm="Hapus pengajuan adopsi {{ $adoption->cat->name }}? Kucing akan kembali tersedia di katalog.">
+                        @csrf
+                        @method('DELETE')
                         <button 
-                          type="button" 
-                          onclick="openDeleteModal('{{ route('adoptions.destroy', $adoption) }}', '{{ e($adoption->cat->name) }}')"
+                          type="submit" 
                           class="icon-btn min-w-[44px] min-h-[44px] p-2.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-colors shadow-sm cursor-pointer flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-400" 
                           aria-label="Hapus pengajuan" 
                           title="Hapus pengajuan"
@@ -312,6 +314,7 @@
                             <path d="M4 7h16M10 11v6M14 11v6M5 7l1 13a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1l1-13M9 7V4h6v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                           </svg>
                         </button>
+                        </form>
                       </div>
                     @endif
                   </td>
@@ -336,39 +339,7 @@
   </footer>
 
   <!-- ========================================================================= -->
-  <!-- DELETE CONFIRMATION MODAL WINDOW -->
-  <!-- ========================================================================= -->
-  <div id="delete-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm p-4" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title" onclick="if (event.target === this) closeDeleteModal()">
-    <div class="w-full max-w-md rounded-2xl bg-[#141519] border border-white/10 shadow-[0_24px_60px_rgba(0,0,0,0.75)] p-6 space-y-5">
-      <div class="flex items-start gap-4">
-        <div class="w-11 h-11 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-400 flex items-center justify-center shrink-0">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-          </svg>
-        </div>
-        <div class="space-y-1.5">
-          <h3 id="delete-modal-title" class="font-display font-bold text-lg text-white">Hapus Pengajuan Adopsi?</h3>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            Apakah kamu yakin ingin menghapus data adopsi kucing <strong id="delete-cat-name" class="text-white font-semibold"></strong>? Kucing akan kembali tersedia di katalog adopsi.
-          </p>
-        </div>
-      </div>
-
-      <form id="delete-adoption-form" method="POST" class="flex items-center justify-end gap-2.5 pt-2 border-t border-white/[0.08]">
-        @csrf
-        @method('DELETE')
-        <button type="button" onclick="closeDeleteModal()" class="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-slate-300 hover:text-white transition-colors cursor-pointer">
-          Batal
-        </button>
-        <button type="submit" id="confirm-delete-btn" class="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-xs font-semibold text-white shadow-lg shadow-rose-600/25 transition-colors cursor-pointer">
-          Ya, Hapus
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- ========================================================================= -->
-  <!-- JAVASCRIPT: USER DROPDOWN & DELETE MODAL -->
+  <!-- JAVASCRIPT: USER DROPDOWN -->
   <!-- ========================================================================= -->
   <script>
     function toggleUserDropdown() {
@@ -377,28 +348,6 @@
         dropdown.classList.toggle('hidden');
       }
     }
-
-    function openDeleteModal(actionUrl, catName) {
-      const modal = document.getElementById('delete-modal');
-      const form = document.getElementById('delete-adoption-form');
-      const nameEl = document.getElementById('delete-cat-name');
-      if (!modal || !form || !nameEl) return;
-      form.action = actionUrl;
-      nameEl.textContent = catName;
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-    }
-
-    function closeDeleteModal() {
-      const modal = document.getElementById('delete-modal');
-      if (!modal) return;
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-    }
-
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') closeDeleteModal();
-    });
 
     document.addEventListener('click', function(e) {
       const btn = document.getElementById('user-menu-button');

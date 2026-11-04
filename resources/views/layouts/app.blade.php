@@ -65,7 +65,7 @@
 
     <main id="konten" class="page @yield('page-class')">
         @if (session('status'))
-            <p class="flash" role="status">{{ session('status') }}</p>
+            <p class="flash" id="flash-banner" role="status">{{ session('status') }}</p>
         @endif
 
         @yield('content')
