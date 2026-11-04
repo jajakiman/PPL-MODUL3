@@ -14,7 +14,7 @@ class CatFactory extends Factory
     {
         return [
             'name' => fake()->unique()->firstName(),
-            'found_at' => fake()->randomElement(['Parkiran Gedung C', 'Kantin Utama', 'Depan Perpustakaan', 'Masjid Kampus']),
+            'found_at' => fake()->randomElement(['Dago, Bandung', 'Buahbatu, Bandung', 'Ciumbuleuit, Bandung', 'Sukajadi, Bandung']),
             'breed' => fake()->randomElement(Cat::BREEDS),
             'temper' => fake()->randomElement(Cat::TEMPERS),
             'age' => fake()->numberBetween(1, 60),
