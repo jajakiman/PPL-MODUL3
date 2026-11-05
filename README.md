@@ -1,24 +1,5 @@
-# Modul 3 PPL: Automated End-to-End Testing (Laravel Dusk)
+# Modul 3 PPL: Automated Testing
 
-Aplikasi **EISD Meowdopt** adalah platform sistem informasi shelter dan adopsi kucing kampus yang dikembangkan menggunakan **Laravel 12**. Repositori ini digunakan sebagai studi kasus praktikum **Modul 3 Praktikum Perangkat Lunak (PPL)** dengan fokus pengujian otomatis antarmuka web (*Browser / E2E Testing*) menggunakan **Laravel Dusk**.
-
-### Konfigurasi Environment & Database
-1. Salin file `.env.example` menjadi `.env`
-2. Generate Application Key:
-   ```bash
-   php artisan key:generate
-   ```
-3. Pastikan service **MySQL (XAMPP / MariaDB)** sudah aktif di port `3306`. Buat database baru bernama `eisd_meowdopt`, atau biarkan terminal Laravel membuatnya secara otomatis saat proses migrasi.
-4. Jalankan migrasi tabel sekaligus pengisian data awal (seeder):
-   ```bash
-   php artisan migrate --seed
-   ```
-
-### C. Running APP
-Jalankan website di server lokal:
-```bash
-php artisan serve
-```
 ## Daftar Skenario Test
 
 Gunakan tabel skenario berikut sebagai acuan utama dalam menyusun file pengujian Dusk (`tests/Browser/`):
