@@ -1,4 +1,4 @@
-# Modul 3 Proyek Perangkat Lunak: Automated Testing
+# Modul 3 PPL: Automated Testing
 
 ### Konfigurasi Environment & Database
 1. Salin file `.env.example` menjadi `.env`
