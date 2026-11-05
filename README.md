@@ -1,4 +1,11 @@
-# Modul 3 PPL: Automated Testing
+# Modul 3 Proyek Perangkat Lunak: Automated Testing
+
+### Konfigurasi Environment & Database
+1. Salin file `.env.example` menjadi `.env`
+2. Generate Application Key
+3. Pastikan service **MySQL (XAMPP / MariaDB)** sudah aktif di port `3306`. Buat database baru bernama `eisd_meowdopt`, atau biarkan terminal Laravel membuatnya secara otomatis saat proses migrasi.
+4. Jalankan migrasi tabel sekaligus pengisian data awal (seeder)
+5. Jalankan website di server lokal
 
 ## Daftar Skenario Test
 
