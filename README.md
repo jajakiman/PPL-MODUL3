@@ -3,7 +3,7 @@
 ### Konfigurasi Environment & Database
 1. Salin file `.env.example` menjadi `.env`
 2. Generate Application Key
-3. Pastikan service **MySQL (XAMPP / MariaDB)** sudah aktif. Buat database baru bernama `eisd_meowdopt`, atau biarkan terminal Laravel membuatnya secara otomatis saat proses migrasi.
+3. Pastikan service **MySQL** sudah aktif. Buat database baru bernama `eisd_meowdopt`, atau biarkan terminal Laravel membuatnya secara otomatis saat proses migrasi.
 4. Jalankan migrasi tabel sekaligus pengisian data awal (seeder)
 5. Jalankan website di server lokal
 
