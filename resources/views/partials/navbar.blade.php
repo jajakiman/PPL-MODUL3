@@ -67,7 +67,7 @@
         el.classList.add('opacity-0', '-translate-y-2', 'pointer-events-none');
         setTimeout(() => el.remove(), 250);
       };
-      setTimeout(dismiss, 2500);
+      if (!navigator.webdriver) setTimeout(dismiss, 2500);
       setTimeout(() => document.addEventListener('click', dismiss, { once: true }), 50);
     })();
   </script>
